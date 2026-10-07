@@ -1,0 +1,45 @@
+# --- Secrets: never commit ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+# Wazuh install assistant output: holds every generated password
+wazuh-install-files.tar
+wazuh-passwords.txt
+
+# --- Lab artefacts: large and/or contain real host data ---
+*.iso
+*.utm/
+*.qcow2
+*.vhdx
+*.evtx
+# Raw exports stay local. Only sanitised output is committed.
+lab/export/raw/
+lab/export/mapping.json
+
+# --- Runtime data ---
+*.sqlite
+*.sqlite-journal
+*.db
+*.log
+
+# --- Node / build ---
+node_modules/
+.next/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.vercel/
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
