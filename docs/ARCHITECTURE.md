@@ -40,7 +40,7 @@ Checked on 2026-10-07 against official sources. Every lab part has to run on ARM
 | Part | Version | ARM64 status | Source |
 | --- | --- | --- | --- |
 | UTM | 4.7.5 | Native Apple Silicon | [GitHub releases](https://github.com/utmapp/UTM/releases) |
-| Ubuntu Server | 24.04.5 LTS, `arm64` ISO | Native | [cdimage.ubuntu.com](https://cdimage.ubuntu.com/releases/noble/release/) |
+| Ubuntu | 22.04.5 LTS `arm64` (UTM gallery image, desktop turned off) | Native | [UTM gallery](https://mac.getutm.app/gallery/) |
 | Wazuh manager, indexer, dashboard | 4.14.8 | Native `arm64` `.deb` packages | [Packages list](https://github.com/wazuh/wazuh-documentation/blob/v4.14.8/source/installation-guide/packages-list.rst) |
 | Windows 11 | Latest ARM64 ISO from Microsoft | Native | [microsoft.com](https://www.microsoft.com/software-download/windows11arm64) |
 | Wazuh agent (Windows) | 4.14.8 | **x86 only.** Runs under Windows on ARM's built-in x86/x64 emulation (Prism). | [Windows agent docs](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-windows.html) |
@@ -52,7 +52,7 @@ Checked on 2026-10-07 against official sources. Every lab part has to run on ARM
 
 ### Choices worth explaining
 
-- **Ubuntu 24.04, not 26.04.** 26.04 is out, but Wazuh 4.14.8 only lists Ubuntu up to 24.04 as recommended. A SIEM install is not the place to be first.
+- **Ubuntu 22.04, not 26.04.** 26.04 is out, but Wazuh 4.14.8 only lists Ubuntu up to 24.04. I planned 24.04 Server, ended up with UTM's ready-made 22.04 image, and kept it because Wazuh supports it. I turned the desktop off (`multi-user.target`) to save about 1 GB of RAM.
 - **sysmon-modular over SwiftOnSecurity.** SwiftOnSecurity's config hasn't had a commit since October 2021. sysmon-modular is still maintained (last commit September 2026) and tags events with ATT&CK technique IDs, which feeds straight into the coverage page.
 - **Wazuh agent under emulation.** There is no native Windows ARM64 agent. Emulation costs some CPU, which doesn't matter for one lab endpoint. Its event log collection reads the same Windows channels as on x64.
 - **Supabase over Neon.** Both are hosted Postgres. Supabase also gives me login for analyst mode and row-level security in the same project, so there's one less service to wire up.
@@ -63,8 +63,13 @@ Checked on 2026-10-07 against official sources. Every lab part has to run on ARM
 
 | | RAM | CPU cores | Disk |
 | --- | --- | --- | --- |
-| Ubuntu + Wazuh VM | 6 GB | 4 | 50 GB |
-| Windows 11 ARM VM | 4 GB | 2 | 64 GB |
-| Left for macOS | ~6 GB | | |
+| Ubuntu + Wazuh VM | 4 GB | 4 | 64 GB (60 GB root after `lvextend`) |
+| Windows 11 ARM VM | 4 GB | 4 | 64 GB |
+| Left for macOS | ~8 GB | | |
 
-Wazuh's own guide asks for 8 GB for up to 25 agents. With one agent, 6 GB works, but close heavy apps while the lab runs.
+Wazuh's own guide asks for 8 GB for up to 25 agents. With one agent it runs on 4 GB (about 1.6 GB still free after install). I chose 4 GB over 6 GB to leave room for macOS.
+
+Rules learned the hard way on day one:
+- **Only these two VMs run at once.** A forgotten third VM pushed the Mac into heavy swap and froze the Wazuh VM.
+- **Keep 30 GB+ free on the Mac.** VM disks are thin files that grow. When the Mac disk hit 100%, QEMU paused the VM and `wazuh-manager` failed to start until I restarted it.
+- **Run `sudo fstrim -av` in the Ubuntu VM after big changes.** It hands deleted blocks back to macOS (the disk file went from 40 GB to about 25 GB).
