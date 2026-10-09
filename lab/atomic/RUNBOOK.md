@@ -121,3 +121,27 @@ ID, and whether the default rules named the right ATT&CK technique.
 | T1003.001 | **No** | **Yes - flag ProcessAccess to lsass.exe** |
 | T1070.004 | Yes (92021, lvl 3) | Optional - raise level |
 | T1560.001 | No | Yes - makecab/LOLBin archiving |
+
+## Custom rule validation (2026-10-09)
+
+After deploying `lab/wazuh/rules/local_rules.xml` and re-running the missed tests:
+
+- **100020 (discovery)** fires at level 6 on `whoami.exe` / `quser.exe`. Was invisible before. VALIDATED.
+- **100010 (LSASS access)** fires at level 12. But first I had to fix the telemetry:
+  the sysmon-modular balanced profile does not log ProcessAccess (event 10) to
+  lsass, so `Get-WinEvent ... Id=10 | ... lsass` returned nothing. Applied
+  `lab/sysmon/vantage-sysmon.xml` to turn on LSASS ProcessAccess logging, re-ran
+  the dump, and 100010 fired. VALIDATED. Lesson: you cannot alert on what you do
+  not collect; a detection gap can be a telemetry gap, not just a rule gap.
+- **100010 false positives:** `svchost.exe` and `MicrosoftEdgeUpdate.exe` legitimately
+  open lsass and tripped the rule. Real detection, needs tuning. Next step is to
+  exclude known-good sourceImage paths (or raise level only on unusual grantedAccess
+  masks like 0x1410/0x1010). Good candidate for the Phase 5 AI FP-tuning feature.
+
+### Key takeaways for the writeup
+1. Default Wazuh + sysmon-modular caught 4 of 8 techniques. The misses included the
+   most serious one (LSASS credential dumping).
+2. The LSASS miss was a telemetry gap, not a rule gap. Found it by checking the raw
+   Sysmon log on the endpoint, not just the SIEM.
+3. Custom rules closed the gaps; one immediately showed false positives, which is
+   normal and drives the next tuning cycle.
