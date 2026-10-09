@@ -51,7 +51,7 @@ Two VMs in UTM, both on **Shared Network** (`192.168.64.0/24`). Only run these t
 | VM | OS | RAM / CPU / disk | IP in my lab |
 | --- | --- | --- | --- |
 | Wazuh server | Ubuntu 22.04.5 arm64 | 4 GB / 4 / 64 GB | 192.168.64.5 |
-| Endpoint | Windows 11 ARM64 | 4 GB / 4 / 64 GB | 192.168.64.3 |
+| Endpoint | Windows 11 Pro 26H2 ARM64 (26300.9457) | 4 GB / 4 / 64 GB | 192.168.64.3 |
 
 Throughout: commands in a box marked `bash` run in macOS Terminal or over SSH in Ubuntu; boxes marked `powershell` run in **Windows PowerShell as Administrator**. Check your prompt before pasting: `you@Mac ~ %` is the Mac, `ubuntu@ubuntu:~$` is the VM, `PS C:\>` is Windows.
 

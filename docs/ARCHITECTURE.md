@@ -42,7 +42,7 @@ Checked on 2026-10-07 against official sources. Every lab part has to run on ARM
 | UTM | 4.7.5 | Native Apple Silicon | [GitHub releases](https://github.com/utmapp/UTM/releases) |
 | Ubuntu | 22.04.5 LTS `arm64` (UTM gallery image, desktop turned off) | Native | [UTM gallery](https://mac.getutm.app/gallery/) |
 | Wazuh manager, indexer, dashboard | 4.14.8 | Native `arm64` `.deb` packages | [Packages list](https://github.com/wazuh/wazuh-documentation/blob/v4.14.8/source/installation-guide/packages-list.rst) |
-| Windows 11 | Latest ARM64 ISO from Microsoft | Native | [microsoft.com](https://www.microsoft.com/software-download/windows11arm64) |
+| Windows 11 Pro | 26H2, build 26300.9457 (ARM64 ISO from Microsoft) | Native | [microsoft.com](https://www.microsoft.com/software-download/windows11arm64) |
 | Wazuh agent (Windows) | 4.14.8 | **x86 only.** Runs under Windows on ARM's built-in x86/x64 emulation (Prism). | [Windows agent docs](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-windows.html) |
 | Sysmon | 15.22 (Sysinternals release of 2026-09-10) | Native ARM64 binary `Sysmon64a.exe`, confirmed at install | [Sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) |
 | Sysmon config | olafhartong/sysmon-modular, default `sysmonconfig.xml` | Config only, no binary | [GitHub](https://github.com/olafhartong/sysmon-modular) |

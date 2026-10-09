@@ -41,7 +41,6 @@
 ### Left for Junya
 - Delete unused UTM VMs: Debian 11, empty Windows, empty Linux; remove stale Kali + 2nd Ubuntu entries
 - Clone Windows VM as `win11-lab CLEAN` before Phase 2
-- Run `winver` and note the Windows build for ARCHITECTURE.md
 - Delete the old empty folders from the first attempt: `apps/ infra/ endpoint/ detections/ scenarios/`
 
 ### Next: Phase 2, Attacks + detections
