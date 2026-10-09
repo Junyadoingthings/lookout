@@ -65,56 +65,59 @@ ID, and whether the default rules named the right ATT&CK technique.
 - Notes: Caught via PowerShell script block logging (4104). Nice contrast with T1033: encoded/obfuscated execution is flagged, plain discovery is not. Level 4 is low, though, so it would sit far down a busy queue. Tuning candidate: raise level when `-EncodedCommand` is present.
 
 ### 3. T1547.001 — Registry Run Key
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID e55be3fd, reg add to ...CurrentVersion\Run
+- Fired: no dedicated Run-key alert observed in review searches
+- Rule(s): none confirmed
+- Verdict: **MISSED by default rules** (gap, confirm on custom-rule validation)
+- Notes: Sysmon event 13 (registry value set) is logged, but no default rule promotes a Run-key write to an alert. Custom rule candidate.
 
 ### 4. T1053.005 — Scheduled Task
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID fec27f65, created T1053_005_OnLogon + _OnStartup
+- Fired: yes
+- Rule(s): 92205 "Powershell process created an executable file in Windows root folder" (lvl 9)
+- Verdict: **DETECTED (partial)**
+- Notes: Caught the startup script dropped into C:\, not the schtasks registration itself. Good enough to surface, but a dedicated schtasks rule would name the technique correctly.
 
 ### 5. T1136.001 — Create Local Account
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID 6657864e, `net user /add`
+- Fired: yes
+- Rule(s): 60109 "User account enabled or created" (lvl 8), 60110 "User account changed" (lvl 8)
+- Verdict: **DETECTED by default rules**
+- Notes: From the Windows Security event channel (4720), not Sysmon. Clean, high-signal detection.
 
 ### 6. T1003.001 — LSASS Dump (comsvcs)
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID 2536dee2, comsvcs.dll MiniDump of lsass.exe, exit 0
+- Fired: NO alert (searched *lsass* / *credential*, nothing)
+- Rule(s): none
+- Verdict: **MISSED by default rules**
+- Notes: THE headline gap. Credential dumping (ATT&CK's most prized access) ran and Wazuh stayed silent. Sysmon event 10 (ProcessAccess to lsass) is logged by sysmon-modular, but no default Wazuh rule promotes it to an alert. Top priority custom rule.
 
 ### 7. T1070.004 — File Deletion
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID 861ea0b4 (prereq file absent, del still invoked)
+- Fired: yes
+- Rule(s): 92021 "Powershell was used to delete files or directories" (lvl 3)
+- Verdict: **DETECTED (low severity)**
+- Notes: Level 3 is very low and would be buried in a real queue. Indicator-removal matters after an incident, so a tuning bump is worth considering.
 
 ### 8. T1560.001 — Compress for Exfil (makecab)
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID 2a7bc405 (source file absent; makecab.exe still launched)
+- Fired: no makecab alert observed
+- Rule(s): none
+- Verdict: **MISSED** (partial run; re-test with prereqs to confirm)
+- Notes: makecab.exe is a living-off-the-land archiving tool. No default rule flags it. Custom rule candidate, lower priority than LSASS.
 
 ## Coverage summary
+
+**4 of 8 detected by default rules.** Misses: T1033 discovery, T1547.001 Run key, T1003.001 LSASS dump (highest priority), T1560.001 makecab. These drive the custom rules in `lab/wazuh/rules/`.
+
 
 | Technique | Detected by default rules? | Custom rule needed? |
 |---|---|---|
 | T1033 | No | Yes - flag discovery binaries (whoami/systeminfo/net) |
 | T1059.001 | Yes (91837, lvl 4) | Optional - raise level on -enc |
-| T1547.001 | | |
-| T1053.005 | | |
-| T1136.001 | | |
-| T1003.001 | | |
-| T1070.004 | | |
-| T1560.001 | | |
+| T1547.001 | No | Yes - Run key registry writes |
+| T1053.005 | Partial (92205, lvl 9) | Optional - dedicated schtasks rule |
+| T1136.001 | Yes (60109/60110, lvl 8) | No |
+| T1003.001 | **No** | **Yes - flag ProcessAccess to lsass.exe** |
+| T1070.004 | Yes (92021, lvl 3) | Optional - raise level |
+| T1560.001 | No | Yes - makecab/LOLBin archiving |
