@@ -51,11 +51,11 @@ Filled in as each test runs. For each: did it fire, at what rule level, the Wazu
 ID, and whether the default rules named the right ATT&CK technique.
 
 ### 1. T1033 — System Owner/User Discovery
-- Ran:
-- Fired: 
-- Rule(s):
-- Verdict (detected / missed / partial):
-- Notes:
+- Ran: 2026-10-09, GUID 4c4959bf, `whoami` executed on win11-lab
+- Fired: no dedicated alert
+- Rule(s): none (only unrelated 92154 taskschd image-load noise in the window)
+- Verdict: **MISSED by default rules**
+- Notes: Wazuh indexes alerts, not raw events, so `whoami` leaves no trace in the queue at all. `whoami.exe` is a normal admin tool, so the defaults stay silent. Classic L1 gap: discovery recon is invisible unless you build for it. Custom rule candidate.
 
 ### 2. T1059.001 — PowerShell EncodedCommand
 - Ran:
@@ -110,7 +110,7 @@ ID, and whether the default rules named the right ATT&CK technique.
 
 | Technique | Detected by default rules? | Custom rule needed? |
 |---|---|---|
-| T1033 | | |
+| T1033 | No | Yes - flag discovery binaries (whoami/systeminfo/net) |
 | T1059.001 | | |
 | T1547.001 | | |
 | T1053.005 | | |
