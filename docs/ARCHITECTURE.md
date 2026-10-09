@@ -44,7 +44,7 @@ Checked on 2026-10-07 against official sources. Every lab part has to run on ARM
 | Wazuh manager, indexer, dashboard | 4.14.8 | Native `arm64` `.deb` packages | [Packages list](https://github.com/wazuh/wazuh-documentation/blob/v4.14.8/source/installation-guide/packages-list.rst) |
 | Windows 11 | Latest ARM64 ISO from Microsoft | Native | [microsoft.com](https://www.microsoft.com/software-download/windows11arm64) |
 | Wazuh agent (Windows) | 4.14.8 | **x86 only.** Runs under Windows on ARM's built-in x86/x64 emulation (Prism). | [Windows agent docs](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/wazuh-agent-package-windows.html) |
-| Sysmon | Sysinternals release of 2026-09-10 | ARM64 binary `Sysmon64a.exe` in the zip (confirm at install, Phase 1) | [Sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) |
+| Sysmon | 15.22 (Sysinternals release of 2026-09-10) | Native ARM64 binary `Sysmon64a.exe`, confirmed at install | [Sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) |
 | Sysmon config | olafhartong/sysmon-modular, default `sysmonconfig.xml` | Config only, no binary | [GitHub](https://github.com/olafhartong/sysmon-modular) |
 | Invoke-AtomicRedTeam | 2.3.0 | PowerShell runs natively. Some atomics call x64-only tools; Phase 2 picks ones that work. | [GitHub](https://github.com/redcanaryco/invoke-atomicredteam) |
 | Node.js | 22 | Native | |

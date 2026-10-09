@@ -1,6 +1,6 @@
 # Progress
 
-## Current phase: 1, Lab (Wazuh server done, Windows endpoint next)
+## Current phase: 1, Lab (done 2026-10-09, waiting for go-ahead on Phase 2)
 
 ### Environment (detected 2026-10-02)
 
@@ -31,12 +31,20 @@
 - Recovered from Mac disk hitting 100% (VM paused, wazuh-manager failed); cleaned Downloads, `fstrim` reclaimed ~20 GB
 - Known lab shortcut: VM still uses the gallery image's default password (Junya's choice)
 
+- Windows 11 ARM VM (192.168.64.3): UTM guest tools, time zone SAST
+- Sysmon 15.22 (`Sysmon64a.exe`, native ARM64) with sysmon-modular, schema 4.91
+- PowerShell script block logging on
+- Wazuh agent 4.14.8 (`win11-lab`, x86 under emulation) Active, reading Sysmon + PowerShell channels
+- Verified: Sysmon rules 92031 / 92154 firing from win11-lab in Threat Hunting
+- `docs/SETUP.md` section 2 written from what actually happened, with troubleshooting table
+
 ### Left for Junya
 - Delete unused UTM VMs: Debian 11, empty Windows, empty Linux; remove stale Kali + 2nd Ubuntu entries
-- Push `lab/wazuh/agent.conf` to `/var/ossec/etc/shared/default/agent.conf` on the server
+- Clone Windows VM as `win11-lab CLEAN` before Phase 2
+- Run `winver` and note the Windows build for ARCHITECTURE.md
 - Delete the old empty folders from the first attempt: `apps/ infra/ endpoint/ detections/ scenarios/`
 
-### Next
-1. Build Windows 11 ARM VM (4 GB / 4 cores / 64 GB, Shared Network)
-2. Sysmon (sysmon-modular) + script block logging + Wazuh agent
-3. Done when Sysmon events show in the Wazuh dashboard
+### Next: Phase 2, Attacks + detections
+1. Pick 6-8 Atomic Red Team techniques that run on Windows ARM
+2. Run one at a time, record what fired and what didn't in `lab/atomic/RUNBOOK.md`
+3. Write 3-5 custom rules in `lab/wazuh/rules/`, re-test
