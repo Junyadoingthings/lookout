@@ -58,11 +58,11 @@ ID, and whether the default rules named the right ATT&CK technique.
 - Notes: Wazuh indexes alerts, not raw events, so `whoami` leaves no trace in the queue at all. `whoami.exe` is a normal admin tool, so the defaults stay silent. Classic L1 gap: discovery recon is invisible unless you build for it. Custom rule candidate.
 
 ### 2. T1059.001 — PowerShell EncodedCommand
-- Ran:
-- Fired:
-- Rule(s):
-- Verdict:
-- Notes:
+- Ran: 2026-10-09, GUID 86a43bad
+- Fired: yes
+- Rule(s): 91837 (level 4) "Powershell executed Get-Content -Stream or Invoke-Expression. Possible string execution as code"
+- Verdict: **DETECTED by default rules**
+- Notes: Caught via PowerShell script block logging (4104). Nice contrast with T1033: encoded/obfuscated execution is flagged, plain discovery is not. Level 4 is low, though, so it would sit far down a busy queue. Tuning candidate: raise level when `-EncodedCommand` is present.
 
 ### 3. T1547.001 — Registry Run Key
 - Ran:
@@ -111,7 +111,7 @@ ID, and whether the default rules named the right ATT&CK technique.
 | Technique | Detected by default rules? | Custom rule needed? |
 |---|---|---|
 | T1033 | No | Yes - flag discovery binaries (whoami/systeminfo/net) |
-| T1059.001 | | |
+| T1059.001 | Yes (91837, lvl 4) | Optional - raise level on -enc |
 | T1547.001 | | |
 | T1053.005 | | |
 | T1136.001 | | |
