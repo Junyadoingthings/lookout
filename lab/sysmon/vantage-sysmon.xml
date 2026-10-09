@@ -1,0 +1,63 @@
+<!--
+  VANTAGE lab Sysmon config.
+
+  The olafhartong/sysmon-modular "balanced" profile we started with does not
+  log ProcessAccess (event 10) to lsass.exe, so the credential-dumping test in
+  Phase 2 produced no telemetry at all - nothing for a rule to match. This config
+  turns that collection on, plus the other events our custom rules in
+  lab/wazuh/rules/local_rules.xml depend on.
+
+  It is deliberately small and lab-focused, not a production profile. In a real
+  environment you would tune the excludes heavily to control volume.
+
+  Apply on the endpoint (PowerShell as Administrator):
+    C:\Tools\Sysmon\Sysmon64a.exe -c C:\Tools\vantage-sysmon.xml
+  Confirm:
+    C:\Tools\Sysmon\Sysmon64a.exe -c      (dumps the active config)
+-->
+<Sysmon schemaversion="4.90">
+  <HashAlgorithms>SHA256</HashAlgorithms>
+  <DnsLookup>False</DnsLookup>
+
+  <EventFiltering>
+
+    <!-- Event 1: Process creation. Log everything; our discovery, schtasks and
+         makecab rules key off originalFileName and commandLine. -->
+    <RuleGroup name="proc-create" groupRelation="or">
+      <ProcessCreate onmatch="exclude" />
+    </RuleGroup>
+
+    <!-- Event 3: Network connections, initiated by any process. -->
+    <RuleGroup name="net" groupRelation="or">
+      <NetworkConnect onmatch="exclude" />
+    </RuleGroup>
+
+    <!-- Event 10: ProcessAccess. THIS is the gap we are closing. Log any process
+         that opens lsass.exe with a handle that allows memory read, which is what
+         a credential dump needs. T1003.001. -->
+    <RuleGroup name="lsass-access" groupRelation="or">
+      <ProcessAccess onmatch="include">
+        <TargetImage condition="image">lsass.exe</TargetImage>
+      </ProcessAccess>
+    </RuleGroup>
+
+    <!-- Events 12/13/14: Registry. Include autostart Run keys for the persistence
+         rule (T1547.001). -->
+    <RuleGroup name="reg-runkeys" groupRelation="or">
+      <RegistryEvent onmatch="include">
+        <TargetObject condition="contains">\CurrentVersion\Run</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\RunOnce</TargetObject>
+      </RegistryEvent>
+    </RuleGroup>
+
+    <!-- Event 11: File creation in autostart and temp locations, useful context. -->
+    <RuleGroup name="file-create" groupRelation="or">
+      <FileCreate onmatch="include">
+        <TargetFilename condition="contains">\Startup\</TargetFilename>
+        <TargetFilename condition="end with">.bat</TargetFilename>
+        <TargetFilename condition="end with">.ps1</TargetFilename>
+      </FileCreate>
+    </RuleGroup>
+
+  </EventFiltering>
+</Sysmon>
