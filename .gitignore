@@ -43,3 +43,6 @@ test-results/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Phase 3 export output: sanitised JSON is committed, mapping stays local
+lab/export/mapping.json

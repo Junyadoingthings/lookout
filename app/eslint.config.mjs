@@ -18,6 +18,11 @@ const eslintConfig = defineConfig([
       "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },
+  {
+    // CLI scripts and the seed legitimately print to stdout.
+    files: ["scripts/**/*.ts", "src/db/**/*.ts"],
+    rules: { "no-console": "off" },
+  },
   // Turns off style rules that fight with Prettier. Keep last.
   prettier,
   globalIgnores([
