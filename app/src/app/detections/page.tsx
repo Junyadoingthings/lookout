@@ -52,7 +52,10 @@ export default function DetectionsPage() {
                     className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium"
                     style={
                       d.validated
-                        ? { color: "var(--ok)", backgroundColor: "color-mix(in srgb, var(--ok) 14%, transparent)" }
+                        ? {
+                            color: "var(--ok)",
+                            backgroundColor: "color-mix(in srgb, var(--ok) 14%, transparent)",
+                          }
                         : { color: "var(--muted)", backgroundColor: "var(--surface-2)" }
                     }
                   >
@@ -64,19 +67,23 @@ export default function DetectionsPage() {
                 <div className="grid gap-4 p-4 lg:grid-cols-2">
                   <div className="space-y-3">
                     <div>
-                      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Catches</h3>
+                      <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+                        Catches
+                      </h3>
                       <p className="mt-1 text-sm text-foreground">{d.catches}</p>
                     </div>
                     <div>
-                      <h3 className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                      <h3 className="flex items-center gap-1 text-xs font-semibold tracking-wide text-muted uppercase">
                         <AlertTriangle size={12} /> Known false positives
                       </h3>
                       <p className="mt-1 text-sm text-muted">{d.falsePositives}</p>
                     </div>
                     {d.example && (
                       <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Example it fired on</h3>
-                        <code className="mt-1 block break-all rounded bg-surface-2 p-2 font-mono text-xs text-foreground">
+                        <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+                          Example it fired on
+                        </h3>
+                        <code className="mt-1 block rounded bg-surface-2 p-2 font-mono text-xs break-all text-foreground">
                           {d.example}
                         </code>
                       </div>

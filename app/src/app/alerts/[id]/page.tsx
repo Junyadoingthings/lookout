@@ -14,9 +14,13 @@ import {
 import { DetailSplit } from "@/components/alerts/detail-split";
 import { JsonViewer } from "@/components/alerts/json-viewer";
 import { NotesEditor } from "@/components/alerts/notes-editor";
+import { TriagePanel } from "@/components/alerts/triage-panel";
 import { VerdictBar } from "@/components/alerts/verdict-bar";
 import { SeverityBadge } from "@/components/ui/badge";
 import { getAlert } from "@/db/queries";
+import { aiConfigured } from "@/lib/ai/client";
+import { getCachedTriage } from "@/lib/ai/triage";
+import { isAnalyst } from "@/lib/auth";
 import { formatTimestamp } from "@/lib/utils";
 
 export async function generateMetadata({
@@ -33,6 +37,9 @@ export default async function AlertDetail({ params }: { params: Promise<{ id: st
   const { id } = await params;
   const alert = await getAlert(id);
   if (!alert) notFound();
+
+  const [cachedTriage, analyst] = await Promise.all([getCachedTriage(id), isAnalyst()]);
+  const aiReady = analyst && aiConfigured();
 
   return (
     <div className="flex flex-col">
@@ -73,6 +80,7 @@ export default async function AlertDetail({ params }: { params: Promise<{ id: st
         <DetailSplit
           left={
             <div className="space-y-4">
+              <TriagePanel alertId={alert.id} initial={cachedTriage} aiReady={aiReady} />
               <Section title="Key fields">
                 <KeyFields alert={alert} />
               </Section>

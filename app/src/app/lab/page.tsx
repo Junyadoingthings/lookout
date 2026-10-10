@@ -30,9 +30,9 @@ export default function LabPage() {
           <div className="space-y-3 text-sm leading-relaxed text-muted">
             <p>
               I built this lab to learn Level 1 SOC work by doing it: collect logs, run real attack
-              techniques, see what fires, and write detections for what the defaults miss. Everything
-              runs on one MacBook Air with 16 GB of RAM, so the whole thing is two VMs in UTM on a
-              host-only network. The victim is never exposed.
+              techniques, see what fires, and write detections for what the defaults miss.
+              Everything runs on one MacBook Air with 16 GB of RAM, so the whole thing is two VMs in
+              UTM on a host-only network. The victim is never exposed.
             </p>
             <p>
               Attacks run on the Windows endpoint with Atomic Red Team. Sysmon and the Wazuh agent
@@ -56,7 +56,10 @@ export default function LabPage() {
             </div>
             <dl className="divide-y divide-border">
               {VERSIONS.map(([k, v]) => (
-                <div key={k} className="grid grid-cols-1 gap-1 px-4 py-2.5 sm:grid-cols-[160px_1fr]">
+                <div
+                  key={k}
+                  className="grid grid-cols-1 gap-1 px-4 py-2.5 sm:grid-cols-[160px_1fr]"
+                >
                   <dt className="text-sm text-muted">{k}</dt>
                   <dd className="text-sm text-foreground">{v}</dd>
                 </div>

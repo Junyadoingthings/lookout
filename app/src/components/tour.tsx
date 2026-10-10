@@ -105,7 +105,9 @@ export function Tour() {
     : null;
 
   // Place the tooltip below the highlight, or centered if no target.
-  const tipTop = box ? Math.min(box.top + box.height + 10, window.innerHeight - 180) : window.innerHeight / 2 - 90;
+  const tipTop = box
+    ? Math.min(box.top + box.height + 10, window.innerHeight - 180)
+    : window.innerHeight / 2 - 90;
   const tipLeft = box
     ? Math.max(12, Math.min(box.left, window.innerWidth - 332))
     : window.innerWidth / 2 - 160;
@@ -139,7 +141,11 @@ export function Tour() {
         <h3 className="mt-1 text-sm font-semibold text-foreground">{step.title}</h3>
         <p className="mt-1 text-sm text-muted">{step.body}</p>
         <div className="mt-3 flex items-center justify-between">
-          <button type="button" onClick={finish} className="text-xs text-muted-2 hover:text-foreground">
+          <button
+            type="button"
+            onClick={finish}
+            className="text-xs text-muted-2 hover:text-foreground"
+          >
             Skip
           </button>
           <div className="flex gap-2">

@@ -125,10 +125,7 @@ export async function listCases() {
   const rows = await db.select().from(cases).orderBy(desc(cases.updatedAt));
   const withCounts = await Promise.all(
     rows.map(async (c) => {
-      const counted = await db
-        .select({ n: count() })
-        .from(alerts)
-        .where(eq(alerts.caseId, c.id));
+      const counted = await db.select({ n: count() }).from(alerts).where(eq(alerts.caseId, c.id));
       return { ...c, alertCount: counted[0]?.n ?? 0 };
     }),
   );

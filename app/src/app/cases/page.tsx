@@ -47,7 +47,9 @@ async function CaseList() {
             </span>
           </div>
           <div className="mt-2 flex items-center gap-3 text-xs text-muted-2">
-            <span>{c.alertCount} alert{c.alertCount === 1 ? "" : "s"}</span>
+            <span>
+              {c.alertCount} alert{c.alertCount === 1 ? "" : "s"}
+            </span>
             <span>updated {relativeTime(c.updatedAt)} ago</span>
           </div>
         </Link>

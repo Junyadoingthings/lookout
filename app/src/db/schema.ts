@@ -89,6 +89,44 @@ export const cases = pgTable("cases", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** The AI features whose output we cache. */
+export const aiFeature = pgEnum("ai_feature", [
+  "triage",
+  "explain",
+  "case_report",
+  "rule_suggest",
+  "fp_tuning",
+]);
+
+/**
+ * Cached AI output. Keyed by alert + feature + prompt version so the public
+ * demo reads cached results for free and fresh runs only happen in analyst mode.
+ * The analyst can accept/edit/reject; `accepted` feeds the accuracy tracker.
+ */
+export const aiAnalyses = pgTable(
+  "ai_analyses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    alertId: uuid("alert_id").references(() => alerts.id, { onDelete: "cascade" }),
+    feature: aiFeature("feature").notNull(),
+    promptVersion: text("prompt_version").notNull(),
+    model: text("model").notNull(),
+    output: jsonb("output").$type<Record<string, unknown>>().notNull(),
+    // null = not yet reviewed; true = accepted; false = rejected
+    accepted: integer("accepted"),
+    inputTokens: integer("input_tokens"),
+    outputTokens: integer("output_tokens"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("ai_alert_feature_idx").on(t.alertId, t.feature, t.promptVersion)],
+);
+
+/** Daily counter for the fresh-AI-call rate limit. One row per day. */
+export const aiUsage = pgTable("ai_usage", {
+  day: text("day").primaryKey(), // YYYY-MM-DD (UTC)
+  calls: integer("calls").notNull().default(0),
+});
+
 export const alertsRelations = relations(alerts, ({ one }) => ({
   case: one(cases, { fields: [alerts.caseId], references: [cases.id] }),
 }));
@@ -101,3 +139,4 @@ export type Alert = typeof alerts.$inferSelect;
 export type NewAlert = typeof alerts.$inferInsert;
 export type Case = typeof cases.$inferSelect;
 export type NewCase = typeof cases.$inferInsert;
+export type AiAnalysis = typeof aiAnalyses.$inferSelect;

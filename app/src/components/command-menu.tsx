@@ -58,7 +58,10 @@ export function CommandMenu() {
           <Command.Empty className="px-2 py-6 text-center text-sm text-muted">
             No results.
           </Command.Empty>
-          <Command.Group heading="Go to" className="px-1 text-xs text-muted-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5">
+          <Command.Group
+            heading="Go to"
+            className="px-1 text-xs text-muted-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5"
+          >
             {NAV_ITEMS.map((item) => (
               <Command.Item
                 key={item.href}
@@ -70,12 +73,19 @@ export function CommandMenu() {
               </Command.Item>
             ))}
           </Command.Group>
-          <Command.Group heading="Actions" className="px-1 text-xs text-muted-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5">
+          <Command.Group
+            heading="Actions"
+            className="px-1 text-xs text-muted-2 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5"
+          >
             <Command.Item
               onSelect={() => run(() => setTheme(resolvedTheme === "dark" ? "light" : "dark"))}
               className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-2 text-sm text-foreground data-[selected=true]:bg-surface-hover"
             >
-              {resolvedTheme === "dark" ? <Sun size={15} className="text-muted-2" /> : <Moon size={15} className="text-muted-2" />}
+              {resolvedTheme === "dark" ? (
+                <Sun size={15} className="text-muted-2" />
+              ) : (
+                <Moon size={15} className="text-muted-2" />
+              )}
               Toggle theme
             </Command.Item>
             <Command.Item
@@ -95,7 +105,8 @@ export function CommandMenu() {
         <div className="flex items-center justify-between border-t border-border px-3 py-1.5 text-[11px] text-muted-2">
           <span>Navigate with arrows</span>
           <span>
-            <kbd className="font-mono">enter</kbd> to select · <kbd className="font-mono">esc</kbd> to close
+            <kbd className="font-mono">enter</kbd> to select · <kbd className="font-mono">esc</kbd>{" "}
+            to close
           </span>
         </div>
       </div>

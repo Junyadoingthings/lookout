@@ -134,16 +134,31 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
       <table className="w-full border-collapse text-sm">
         <thead className="sticky top-0 z-10 bg-surface-2 text-xs">
           <tr className="border-b border-border">
-            <SortHeader label="Sev" k="severity" className="w-20" {...{ sortKey, sortDir, toggleSort }} />
+            <SortHeader
+              label="Sev"
+              k="severity"
+              className="w-20"
+              {...{ sortKey, sortDir, toggleSort }}
+            />
             <th className="px-3 py-2 text-left font-medium text-muted">Rule</th>
-            <SortHeader label="Host" k="host" className="hidden w-36 md:table-cell" {...{ sortKey, sortDir, toggleSort }} />
+            <SortHeader
+              label="Host"
+              k="host"
+              className="hidden w-36 md:table-cell"
+              {...{ sortKey, sortDir, toggleSort }}
+            />
             <th className="hidden px-3 py-2 text-left font-medium text-muted lg:table-cell">
               ATT&CK
             </th>
             <th className="hidden px-3 py-2 text-left font-medium text-muted sm:table-cell">
               Status
             </th>
-            <SortHeader label="Time" k="time" className="w-16 text-right" {...{ sortKey, sortDir, toggleSort }} />
+            <SortHeader
+              label="Time"
+              k="time"
+              className="w-16 text-right"
+              {...{ sortKey, sortDir, toggleSort }}
+            />
           </tr>
         </thead>
         <tbody>
