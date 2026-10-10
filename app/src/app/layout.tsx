@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { MobileNav, Sidebar } from "@/components/app-shell/sidebar";
+import { CommandMenu } from "@/components/command-menu";
+import { ShortcutsOverlay } from "@/components/shortcuts-overlay";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
@@ -36,6 +38,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <main className="min-w-0 flex-1">{children}</main>
             </div>
           </div>
+          <CommandMenu />
+          <ShortcutsOverlay />
           <Toaster
             theme="system"
             position="bottom-right"

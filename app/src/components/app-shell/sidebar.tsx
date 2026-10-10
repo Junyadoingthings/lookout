@@ -1,6 +1,6 @@
 "use client";
 
-import { Code2 } from "lucide-react";
+import { Code2, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,6 +19,18 @@ export function Sidebar() {
         <Link href="/alerts" className="rounded-md focus-visible:outline-none">
           <Logo />
         </Link>
+      </div>
+
+      <div className="px-3 pb-1">
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent("vantage:command"))}
+          className="flex w-full items-center gap-2 rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted-2 transition-colors hover:text-foreground"
+        >
+          <Search size={15} />
+          <span className="flex-1 text-left">Search</span>
+          <kbd className="font-mono text-[10px]">⌘K</kbd>
+        </button>
       </div>
 
       <nav className="flex-1 space-y-0.5 px-3 py-2">
