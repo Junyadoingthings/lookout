@@ -6,6 +6,7 @@ import { AlertTable } from "@/components/alerts/alert-table";
 import { FilterBar } from "@/components/alerts/filter-bar";
 import { QueueSkeleton } from "@/components/alerts/queue-skeleton";
 import { QueueStatsBar } from "@/components/alerts/queue-stats";
+import { Tour } from "@/components/tour";
 import { EmptyState, PageHeader } from "@/components/ui/page";
 import { getQueueStats, listAlerts, type AlertFilters } from "@/db/queries";
 
@@ -24,7 +25,9 @@ async function QueueData({ filters }: { filters: AlertFilters }) {
   return (
     <>
       <QueueStatsBar stats={stats} />
-      <FilterBar />
+      <div data-tour="filters">
+        <FilterBar />
+      </div>
       {alerts.length === 0 ? (
         <div className="rounded-lg border border-border">
           <EmptyState
@@ -39,7 +42,9 @@ async function QueueData({ filters }: { filters: AlertFilters }) {
         </div>
       ) : (
         <>
-          <AlertTable alerts={alerts} />
+          <div data-tour="queue">
+            <AlertTable alerts={alerts} />
+          </div>
           <p className="text-xs text-muted-2">
             Showing {alerts.length} alert{alerts.length === 1 ? "" : "s"}
             {filtered ? " (filtered)" : ""}.
@@ -65,6 +70,7 @@ export default async function AlertsPage({
 
   return (
     <div className="flex flex-col">
+      <Tour />
       <PageHeader
         title="Alerts"
         description="Detections from the lab. Triage with j/k to move, enter to open, t/f/e to set a verdict."

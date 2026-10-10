@@ -1,7 +1,7 @@
 "use client";
 
 import { Command } from "cmdk";
-import { Moon, Search, Sun } from "lucide-react";
+import { Compass, Moon, Search, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -77,6 +77,18 @@ export function CommandMenu() {
             >
               {resolvedTheme === "dark" ? <Sun size={15} className="text-muted-2" /> : <Moon size={15} className="text-muted-2" />}
               Toggle theme
+            </Command.Item>
+            <Command.Item
+              onSelect={() =>
+                run(() => {
+                  router.push("/alerts");
+                  setTimeout(() => window.dispatchEvent(new CustomEvent("vantage:tour")), 150);
+                })
+              }
+              className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-2 text-sm text-foreground data-[selected=true]:bg-surface-hover"
+            >
+              <Compass size={15} className="text-muted-2" />
+              Start tour
             </Command.Item>
           </Command.Group>
         </Command.List>

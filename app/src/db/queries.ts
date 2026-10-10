@@ -122,5 +122,27 @@ export async function hasSampleData(): Promise<boolean> {
 }
 
 export async function listCases() {
-  return db.select().from(cases).orderBy(desc(cases.updatedAt));
+  const rows = await db.select().from(cases).orderBy(desc(cases.updatedAt));
+  const withCounts = await Promise.all(
+    rows.map(async (c) => {
+      const counted = await db
+        .select({ n: count() })
+        .from(alerts)
+        .where(eq(alerts.caseId, c.id));
+      return { ...c, alertCount: counted[0]?.n ?? 0 };
+    }),
+  );
+  return withCounts;
+}
+
+export async function getCase(id: string) {
+  const rows = await db.select().from(cases).where(eq(cases.id, id)).limit(1);
+  const theCase = rows[0];
+  if (!theCase) return undefined;
+  const linked = await db
+    .select(listColumns)
+    .from(alerts)
+    .where(eq(alerts.caseId, id))
+    .orderBy(alerts.timestamp);
+  return { ...theCase, alerts: linked };
 }

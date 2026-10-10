@@ -21,7 +21,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      <div className="px-3 pb-1">
+      <div className="px-3 pb-1" data-tour="search">
         <button
           type="button"
           onClick={() => window.dispatchEvent(new CustomEvent("vantage:command"))}
@@ -33,7 +33,7 @@ export function Sidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-3 py-2">
+      <nav className="flex-1 space-y-0.5 px-3 py-2" data-tour="nav">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
           const Icon = item.icon;

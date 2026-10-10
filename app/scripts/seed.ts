@@ -5,10 +5,10 @@
  * the UI can badge it and so `npm run import` of real data is distinguishable.
  * Delete sample rows before launch with: npm run seed -- --clear
  */
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import { db } from "@/db/client";
-import { alerts as alertsTable } from "@/db/schema";
+import { alerts as alertsTable, cases as casesTable } from "@/db/schema";
 import { sampleDiscoveryAlert, sampleLsassAlert } from "@/lib/wazuh/fixtures";
 import { parseAlert } from "@/lib/wazuh/parse";
 import { sanitizeBatch } from "@/lib/wazuh/sanitize";
@@ -16,7 +16,8 @@ import { sanitizeBatch } from "@/lib/wazuh/sanitize";
 async function main() {
   if (process.argv.includes("--clear")) {
     await db.delete(alertsTable).where(eq(alertsTable.isSample, 1));
-    console.log("Cleared sample alerts.");
+    await db.delete(casesTable).where(eq(casesTable.title, "[Sample] Credential access attempt on WORKSTATION-01"));
+    console.log("Cleared sample alerts and case.");
     process.exit(0);
   }
 
@@ -50,7 +51,35 @@ async function main() {
       .onConflictDoNothing();
   }
 
-  console.log(`Seeded ${alerts.length} sample alerts (isSample=1).`);
+  // A sample incident grouping both alerts, so the Cases page is not empty.
+  const title = "[Sample] Credential access attempt on WORKSTATION-01";
+  const existing = await db.select().from(casesTable).where(eq(casesTable.title, title)).limit(1);
+  const caseId =
+    existing[0]?.id ??
+    (
+      await db
+        .insert(casesTable)
+        .values({
+          title,
+          status: "closed",
+          summary:
+            "Recon followed by an LSASS memory access on WORKSTATION-01. Sample data for the demo.",
+          verdict:
+            "True positive (simulated). The discovery and the LSASS access are consistent with a credential-theft attempt staged with Atomic Red Team.",
+          responseSteps:
+            "1. Isolate the host. 2. Reset credentials cached on it. 3. Hunt for the source process reading LSASS. 4. Confirm no dump file was exfiltrated.",
+          lessonsLearned:
+            "The LSASS access produced no telemetry until Sysmon ProcessAccess logging was enabled. Collection gaps hide the most serious techniques.",
+        })
+        .returning({ id: casesTable.id })
+    )[0]!.id;
+
+  await db
+    .update(alertsTable)
+    .set({ caseId })
+    .where(inArray(alertsTable.sourceId, alerts.map((a) => `sample-${a.sourceId}`)));
+
+  console.log(`Seeded ${alerts.length} sample alerts and 1 sample case (isSample=1).`);
   process.exit(0);
 }
 
