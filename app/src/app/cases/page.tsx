@@ -9,6 +9,9 @@ import { relativeTime } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Cases" };
 
+// DB-backed; render per request rather than prerendering at build.
+export const dynamic = "force-dynamic";
+
 async function CaseList() {
   const cases = await listCases();
   if (cases.length === 0) {
