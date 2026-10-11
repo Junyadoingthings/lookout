@@ -1,6 +1,6 @@
 # Progress
 
-## Current phase: 5 (AI features) done 2026-10-11 — all 8 built. Phase 6/7 next.
+## Current phase: 7 (ship). Code complete + pushed to GitHub public. Vercel connect pending (user).
 
 ### Environment (detected 2026-10-02)
 
