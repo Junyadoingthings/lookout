@@ -1,6 +1,6 @@
 # Progress
 
-## Current phase: 1, Lab (done 2026-10-09, waiting for go-ahead on Phase 2)
+## Current phase: 5 (AI features) done 2026-10-11 — all 8 built. Phase 6/7 next.
 
 ### Environment (detected 2026-10-02)
 

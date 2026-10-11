@@ -1,16 +1,23 @@
 import { AlertTriangle, CheckCircle2, Clock, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 
+import { FpTuning, RuleAssistant } from "@/components/detections/rule-assistant";
 import { CopyButton } from "@/components/ui/copy-button";
 import { PageHeader } from "@/components/ui/page";
 import { Reveal } from "@/components/ui/reveal";
 import { DETECTIONS } from "@/content/detections";
+import { getFpSummary } from "@/db/queries";
+import { aiConfigured } from "@/lib/ai/client";
+import { isAnalyst } from "@/lib/auth";
 import { SEVERITY_META } from "@/lib/ui/meta";
 import { severityFromRuleLevel } from "@/lib/severity";
 
 export const metadata: Metadata = { title: "Detections" };
 
-export default function DetectionsPage() {
+export default async function DetectionsPage() {
+  const [analyst, fpSummary] = await Promise.all([isAnalyst(), getFpSummary()]);
+  const aiReady = analyst && aiConfigured();
+
   return (
     <div className="flex flex-col">
       <PageHeader
@@ -19,6 +26,7 @@ export default function DetectionsPage() {
         icon={ShieldCheck}
       />
       <div className="space-y-4 p-4 md:p-6">
+        <RuleAssistant aiReady={aiReady} />
         {DETECTIONS.map((d, i) => {
           const sev = severityFromRuleLevel(d.level);
           const meta = SEVERITY_META[sev];
@@ -98,6 +106,14 @@ export default function DetectionsPage() {
                       {d.xml}
                     </pre>
                   </div>
+                </div>
+                <div className="px-4 pb-4">
+                  <FpTuning
+                    ruleId={d.id}
+                    ruleDescription={d.title}
+                    fpCount={fpSummary[d.id]?.count ?? 0}
+                    aiReady={aiReady}
+                  />
                 </div>
               </section>
             </Reveal>

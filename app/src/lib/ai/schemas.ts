@@ -53,6 +53,24 @@ export const caseReportOutput = z.object({
 });
 export type CaseReportOutput = z.infer<typeof caseReportOutput>;
 
+/** A suggested detection rule. Always marked untested until confirmed in the lab. */
+export const ruleSuggestOutput = z.object({
+  title: z.string().min(1).max(160),
+  ruleXml: z.string().min(1).max(4000),
+  explanation: z.string().min(1).max(1500),
+  falsePositives: z.string().min(1).max(1000),
+  attackIds: z.array(z.string().max(40)).max(6),
+});
+export type RuleSuggestOutput = z.infer<typeof ruleSuggestOutput>;
+
+/** A false-positive tuning suggestion with its trade-off. */
+export const fpTuningOutput = z.object({
+  suggestion: z.string().min(1).max(1500),
+  xmlChange: z.string().max(2000).optional(),
+  tradeoff: z.string().min(1).max(1000),
+});
+export type FpTuningOutput = z.infer<typeof fpTuningOutput>;
+
 /** JSON Schema for the Messages API output_config.format, kept in sync by hand. */
 export const TRIAGE_JSON_SCHEMA = {
   type: "object",

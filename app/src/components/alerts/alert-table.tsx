@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Layers } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -46,6 +46,7 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
   const router = useRouter();
   const [sortKey, setSortKey] = useState<SortKey>("time");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [grouped, setGrouped] = useState(false);
   const [selected, setSelected] = useState(0);
   const rowRefs = useRef<(HTMLTableRowElement | null)[]>([]);
 
@@ -62,6 +63,23 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
     });
     return rows;
   }, [alerts, sortKey, sortDir]);
+
+  // Near-duplicate clustering. Deterministic (same rule + host + process), so the
+  // queue is not flooded by a noisy rule. No LLM needed: collapsing exact
+  // duplicates is a job for a key, not a model.
+  const display = useMemo(() => {
+    if (!grouped) return sorted.map((row) => ({ row, count: 1 }));
+    const byKey = new Map<string, { row: AlertListItem; count: number }>();
+    for (const row of sorted) {
+      const key = `${row.ruleId}|${row.agentName}|${row.processName ?? ""}`;
+      const existing = byKey.get(key);
+      if (existing) existing.count += 1;
+      else byKey.set(key, { row, count: 1 });
+    }
+    return [...byKey.values()];
+  }, [sorted, grouped]);
+
+  const totalGroupsClustered = grouped ? sorted.length - display.length : 0;
 
   const open = useCallback((id: string) => router.push(`/alerts/${id}`), [router]);
 
@@ -83,13 +101,13 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-      if (!sorted.length) return;
-      const row = sorted[Math.min(selected, sorted.length - 1)];
+      if (!display.length) return;
+      const row = display[Math.min(selected, display.length - 1)]?.row;
       switch (e.key) {
         case "j":
         case "ArrowDown":
           e.preventDefault();
-          setSelected((i) => Math.min(i + 1, sorted.length - 1));
+          setSelected((i) => Math.min(i + 1, display.length - 1));
           break;
         case "k":
         case "ArrowUp":
@@ -115,7 +133,7 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [sorted, selected, open, verdict]);
+  }, [display, selected, open, verdict]);
 
   useEffect(() => {
     rowRefs.current[selected]?.scrollIntoView({ block: "nearest" });
@@ -130,99 +148,133 @@ export function AlertTable({ alerts }: { alerts: AlertListItem[] }) {
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full border-collapse text-sm">
-        <thead className="sticky top-0 z-10 bg-surface-2 text-xs">
-          <tr className="border-b border-border">
-            <SortHeader
-              label="Sev"
-              k="severity"
-              className="w-20"
-              {...{ sortKey, sortDir, toggleSort }}
-            />
-            <th className="px-3 py-2 text-left font-medium text-muted">Rule</th>
-            <SortHeader
-              label="Host"
-              k="host"
-              className="hidden w-36 md:table-cell"
-              {...{ sortKey, sortDir, toggleSort }}
-            />
-            <th className="hidden px-3 py-2 text-left font-medium text-muted lg:table-cell">
-              ATT&CK
-            </th>
-            <th className="hidden px-3 py-2 text-left font-medium text-muted sm:table-cell">
-              Status
-            </th>
-            <SortHeader
-              label="Time"
-              k="time"
-              className="w-16 text-right"
-              {...{ sortKey, sortDir, toggleSort }}
-            />
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((a, i) => {
-            const isSel = i === selected;
-            return (
-              <tr
-                key={a.id}
-                ref={(el) => {
-                  rowRefs.current[i] = el;
-                }}
-                onClick={() => {
-                  setSelected(i);
-                  open(a.id);
-                }}
-                onMouseEnter={() => setSelected(i)}
-                className={cn(
-                  "cursor-pointer border-b border-border/60 transition-colors",
-                  isSel ? "bg-surface-hover" : "hover:bg-surface-hover/60",
-                )}
-              >
-                <td className="px-3 py-2 align-top">
-                  <SeverityBadge severity={a.severity} showLabel={false} />
-                </td>
-                <td className="px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    {a.isSample === 1 && (
-                      <span className="rounded bg-warn/15 px-1 text-[10px] font-medium text-warn">
-                        SAMPLE
-                      </span>
-                    )}
-                    <span className="line-clamp-1 text-foreground">{a.ruleDescription}</span>
-                  </div>
-                  <div className="mt-0.5 flex items-center gap-2 font-mono text-[11px] text-muted-2">
-                    <span>#{a.ruleId}</span>
-                    {a.processName && <span className="truncate">{a.processName}</span>}
-                  </div>
-                </td>
-                <td className="hidden px-3 py-2 align-top font-mono text-xs text-muted md:table-cell">
-                  {a.agentName}
-                </td>
-                <td className="hidden px-3 py-2 align-top lg:table-cell">
-                  <div className="flex flex-wrap gap-1">
-                    {a.mitreIds.slice(0, 2).map((id) => (
-                      <span
-                        key={id}
-                        className="rounded border border-border bg-surface-2 px-1 py-0.5 font-mono text-[10px] text-muted"
-                      >
-                        {id}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="hidden px-3 py-2 align-top sm:table-cell">
-                  <StatusBadge status={a.status} />
-                </td>
-                <td className="tabular px-3 py-2 text-right align-top font-mono text-xs whitespace-nowrap text-muted">
-                  {relativeTime(a.timestamp)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => {
+            setGrouped((g) => !g);
+            setSelected(0);
+          }}
+          aria-pressed={grouped}
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors",
+            grouped
+              ? "border-transparent bg-accent-muted text-accent"
+              : "border-border text-muted hover:text-foreground",
+          )}
+        >
+          <Layers size={13} />
+          Group similar
+        </button>
+        {grouped && totalGroupsClustered > 0 && (
+          <span className="text-xs text-muted-2">
+            {totalGroupsClustered} near-duplicates collapsed
+          </span>
+        )}
+      </div>
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="w-full border-collapse text-sm">
+          <thead className="sticky top-0 z-10 bg-surface-2 text-xs">
+            <tr className="border-b border-border">
+              <SortHeader
+                label="Sev"
+                k="severity"
+                className="w-20"
+                {...{ sortKey, sortDir, toggleSort }}
+              />
+              <th className="px-3 py-2 text-left font-medium text-muted">Rule</th>
+              <SortHeader
+                label="Host"
+                k="host"
+                className="hidden w-36 md:table-cell"
+                {...{ sortKey, sortDir, toggleSort }}
+              />
+              <th className="hidden px-3 py-2 text-left font-medium text-muted lg:table-cell">
+                ATT&CK
+              </th>
+              <th className="hidden px-3 py-2 text-left font-medium text-muted sm:table-cell">
+                Status
+              </th>
+              <SortHeader
+                label="Time"
+                k="time"
+                className="w-16 text-right"
+                {...{ sortKey, sortDir, toggleSort }}
+              />
+            </tr>
+          </thead>
+          <tbody>
+            {display.map(({ row: a, count }, i) => {
+              const isSel = i === selected;
+              return (
+                <tr
+                  key={a.id}
+                  ref={(el) => {
+                    rowRefs.current[i] = el;
+                  }}
+                  onClick={() => {
+                    setSelected(i);
+                    open(a.id);
+                  }}
+                  onMouseEnter={() => setSelected(i)}
+                  className={cn(
+                    "cursor-pointer border-b border-border/60 transition-colors",
+                    isSel ? "bg-surface-hover" : "hover:bg-surface-hover/60",
+                  )}
+                >
+                  <td className="px-3 py-2 align-top">
+                    <SeverityBadge severity={a.severity} showLabel={false} />
+                  </td>
+                  <td className="px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      {a.isSample === 1 && (
+                        <span className="rounded bg-warn/15 px-1 text-[10px] font-medium text-warn">
+                          SAMPLE
+                        </span>
+                      )}
+                      {count > 1 && (
+                        <span
+                          className="rounded bg-accent-muted px-1 text-[10px] font-medium text-accent"
+                          title={`${count} near-duplicates grouped: same rule, host and process`}
+                        >
+                          ×{count}
+                        </span>
+                      )}
+                      <span className="line-clamp-1 text-foreground">{a.ruleDescription}</span>
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-2 font-mono text-[11px] text-muted-2">
+                      <span>#{a.ruleId}</span>
+                      {a.processName && <span className="truncate">{a.processName}</span>}
+                    </div>
+                  </td>
+                  <td className="hidden px-3 py-2 align-top font-mono text-xs text-muted md:table-cell">
+                    {a.agentName}
+                  </td>
+                  <td className="hidden px-3 py-2 align-top lg:table-cell">
+                    <div className="flex flex-wrap gap-1">
+                      {a.mitreIds.slice(0, 2).map((id) => (
+                        <span
+                          key={id}
+                          className="rounded border border-border bg-surface-2 px-1 py-0.5 font-mono text-[10px] text-muted"
+                        >
+                          {id}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="hidden px-3 py-2 align-top sm:table-cell">
+                    <StatusBadge status={a.status} />
+                  </td>
+                  <td className="tabular px-3 py-2 text-right align-top font-mono text-xs whitespace-nowrap text-muted">
+                    {relativeTime(a.timestamp)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

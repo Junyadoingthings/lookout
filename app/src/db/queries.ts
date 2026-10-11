@@ -132,6 +132,30 @@ export async function listCases() {
   return withCounts;
 }
 
+/** For each rule, how many alerts the analyst marked false positive, with samples. */
+export async function getFpSummary(): Promise<
+  Record<string, { count: number; samples: string[] }>
+> {
+  const rows = await db
+    .select({
+      ruleId: alerts.ruleId,
+      description: alerts.ruleDescription,
+      commandLine: alerts.commandLine,
+    })
+    .from(alerts)
+    .where(eq(alerts.status, "false_positive"));
+
+  const out: Record<string, { count: number; samples: string[] }> = {};
+  for (const r of rows) {
+    const entry = (out[r.ruleId] ??= { count: 0, samples: [] });
+    entry.count += 1;
+    if (entry.samples.length < 5) {
+      entry.samples.push(r.commandLine ? `${r.description} — ${r.commandLine}` : r.description);
+    }
+  }
+  return out;
+}
+
 export async function getCase(id: string) {
   const rows = await db.select().from(cases).where(eq(cases.id, id)).limit(1);
   const theCase = rows[0];
