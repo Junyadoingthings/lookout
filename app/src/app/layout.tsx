@@ -17,10 +17,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "VANTAGE", template: "%s · VANTAGE" },
+  title: { default: "Lookout", template: "%s · Lookout" },
   description: "Home SOC lab and alert triage console. Real detections, human verdicts.",
   openGraph: {
-    title: "VANTAGE",
+    title: "Lookout",
     description: "Home SOC lab and alert triage console.",
     type: "website",
   },

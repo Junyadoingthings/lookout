@@ -12,7 +12,7 @@ export function ArchitectureDiagram() {
       viewBox="0 0 900 440"
       className="h-auto w-full"
       role="img"
-      aria-label="VANTAGE architecture: Windows and Ubuntu VMs in UTM feed Wazuh; an export script sanitises alerts into Supabase, which the Vercel console reads, with Claude called server side."
+      aria-label="Lookout architecture: Windows and Ubuntu VMs in UTM feed Wazuh; an export script sanitises alerts into Supabase, which the Vercel console reads, with Claude called server side."
     >
       <defs>
         <marker

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * VANTAGE mark: a watchtower sightline. Two strokes converge to a focal point
- * (the vantage point) over a shield base. Uses currentColor so it inherits the
+ * Lookout mark: a watchtower sightline. Two strokes converge to a focal point
+ * (the lookout point) over a shield base. Uses currentColor so it inherits the
  * surrounding text/accent colour.
  */
 export function LogoMark({ className, size = 24 }: { className?: string; size?: number }) {
@@ -46,7 +46,7 @@ export function Logo({
       <span className="text-accent">
         <LogoMark size={22} />
       </span>
-      {!collapsed && <span className="text-[15px] text-foreground">VANTAGE</span>}
+      {!collapsed && <span className="text-[15px] text-foreground">Lookout</span>}
     </span>
   );
 }

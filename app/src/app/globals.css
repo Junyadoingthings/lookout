@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  VANTAGE design tokens.
+  Lookout design tokens.
   Dark is the default. Light is a first-class theme, toggled by next-themes
   (class strategy: .light / .dark on <html>). Colours are neutral greys with a
   single muted accent and muted, readable severity colours.

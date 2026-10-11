@@ -1,5 +1,5 @@
 <!--
-  VANTAGE custom detection rules.
+  Lookout custom detection rules.
 
   These close the gaps found in Phase 2: techniques that the Atomic Red Team
   tests executed but Wazuh's default ruleset did not alert on. See
@@ -14,7 +14,7 @@
   populates (win.system.channel, win.system.eventID, win.eventdata.*), so it
   does not depend on default Sysmon rule IDs that shift between versions.
 -->
-<group name="sysmon,vantage,">
+<group name="sysmon,lookout,">
 
   <!--
     T1003.001 - OS Credential Dumping: LSASS Memory

@@ -24,7 +24,7 @@ export function Sidebar() {
       <div className="px-3 pb-1" data-tour="search">
         <button
           type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent("vantage:command"))}
+          onClick={() => window.dispatchEvent(new CustomEvent("lookout:command"))}
           className="flex w-full items-center gap-2 rounded-md border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted-2 transition-colors hover:text-foreground"
         >
           <Search size={15} />
@@ -67,7 +67,7 @@ export function Sidebar() {
 
       <div className="border-t border-border p-3">
         <a
-          href="https://github.com/Junyadoingthings/vantage"
+          href="https://github.com/Junyadoingthings/lookout"
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm text-muted transition-colors hover:bg-surface-hover hover:text-foreground"

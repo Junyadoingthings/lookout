@@ -73,7 +73,7 @@ export default function LabPage() {
             The full build, including every problem I hit and how I fixed it, is in the repo&apos;s
             setup guide.{" "}
             <a
-              href="https://github.com/Junyadoingthings/vantage"
+              href="https://github.com/Junyadoingthings/lookout"
               target="_blank"
               rel="noreferrer"
               className="text-accent hover:underline"

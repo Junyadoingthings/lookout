@@ -14,7 +14,7 @@
 
 **Topology (changed 2026-10-07 by the new project brief):** Wazuh runs in an Ubuntu 22.04.5 ARM64 VM in UTM (192.168.64.5), not Docker. Windows 11 ARM in UTM. Console is Next.js on Vercel + Supabase.
 **Versions:** see `docs/ARCHITECTURE.md#versions`. Wazuh pinned to 4.14.8.
-**Repo location:** `~/Developer/vantage` (outside iCloud Drive; iCloud sync conflicts with git and node_modules).
+**Repo location:** `~/Developer/lookout` (outside iCloud Drive; iCloud sync conflicts with git and node_modules).
 
 ### Done (Phase 0)
 - Folder structure from the brief (`app/`, `lab/...`, `docs/cases/`)

@@ -1,6 +1,6 @@
 # Attack runbook
 
-Detection-engineering log for VANTAGE. I run each Atomic Red Team test against the
+Detection-engineering log for Lookout. I run each Atomic Red Team test against the
 `win11-lab` endpoint, record what Wazuh caught, and note the gaps. The gaps are the
 point: they tell me which custom rules to write in Phase 2.
 
@@ -130,7 +130,7 @@ After deploying `lab/wazuh/rules/local_rules.xml` and re-running the missed test
 - **100010 (LSASS access)** fires at level 12. But first I had to fix the telemetry:
   the sysmon-modular balanced profile does not log ProcessAccess (event 10) to
   lsass, so `Get-WinEvent ... Id=10 | ... lsass` returned nothing. Applied
-  `lab/sysmon/vantage-sysmon.xml` to turn on LSASS ProcessAccess logging, re-ran
+  `lab/sysmon/lookout-sysmon.xml` to turn on LSASS ProcessAccess logging, re-ran
   the dump, and 100010 fired. VALIDATED. Lesson: you cannot alert on what you do
   not collect; a detection gap can be a telemetry gap, not just a rule gap.
 - **100010 false positives:** `svchost.exe` and `MicrosoftEdgeUpdate.exe` legitimately

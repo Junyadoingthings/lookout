@@ -11,7 +11,7 @@ import { cookies } from "next/headers";
 export async function isAnalyst(): Promise<boolean> {
   if (process.env.NODE_ENV !== "production") return true;
   const store = await cookies();
-  return store.get("vantage_analyst")?.value === "1";
+  return store.get("lookout_analyst")?.value === "1";
 }
 
 export async function requireAnalyst(): Promise<void> {

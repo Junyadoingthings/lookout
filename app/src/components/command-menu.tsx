@@ -24,10 +24,10 @@ export function CommandMenu() {
       setOpen(true);
     }
     window.addEventListener("keydown", onKey);
-    window.addEventListener("vantage:command", onOpen);
+    window.addEventListener("lookout:command", onOpen);
     return () => {
       window.removeEventListener("keydown", onKey);
-      window.removeEventListener("vantage:command", onOpen);
+      window.removeEventListener("lookout:command", onOpen);
     };
   }, []);
 
@@ -92,7 +92,7 @@ export function CommandMenu() {
               onSelect={() =>
                 run(() => {
                   router.push("/alerts");
-                  setTimeout(() => window.dispatchEvent(new CustomEvent("vantage:tour")), 150);
+                  setTimeout(() => window.dispatchEvent(new CustomEvent("lookout:tour")), 150);
                 })
               }
               className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-2 text-sm text-foreground data-[selected=true]:bg-surface-hover"

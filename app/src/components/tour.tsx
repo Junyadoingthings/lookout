@@ -31,7 +31,7 @@ const STEPS: Step[] = [
   },
 ];
 
-const KEY = "vantage_tour_done_v1";
+const KEY = "lookout_tour_done_v1";
 
 export function Tour() {
   const [active, setActive] = useState(false);
@@ -50,10 +50,10 @@ export function Tour() {
       setI(0);
       setActive(true);
     };
-    window.addEventListener("vantage:tour", onStart);
+    window.addEventListener("lookout:tour", onStart);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("vantage:tour", onStart);
+      window.removeEventListener("lookout:tour", onStart);
     };
   }, []);
 

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "VANTAGE: home SOC lab and alert triage console";
+export const alt = "Lookout: home SOC lab and alert triage console";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,7 +39,7 @@ export default function OgImage() {
           <circle cx="16" cy="13.3" r="1.9" fill="#5b8cff" />
         </svg>
         <span style={{ color: "#e7e8ea", fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
-          VANTAGE
+          Lookout
         </span>
       </div>
 

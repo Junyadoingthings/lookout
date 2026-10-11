@@ -1,6 +1,6 @@
-# VANTAGE console
+# Lookout console
 
-The Next.js app for VANTAGE. See the [root README](../README.md) for the full project.
+The Next.js app for Lookout. See the [root README](../README.md) for the full project.
 
 ```bash
 npm install

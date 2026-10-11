@@ -1,4 +1,4 @@
-# VANTAGE
+# Lookout
 
 A home SOC lab and the triage console I built on top of it.
 

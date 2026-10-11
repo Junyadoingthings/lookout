@@ -1,5 +1,5 @@
 <!--
-  VANTAGE lab Sysmon config.
+  Lookout lab Sysmon config.
 
   The olafhartong/sysmon-modular "balanced" profile we started with does not
   log ProcessAccess (event 10) to lsass.exe, so the credential-dumping test in
@@ -11,7 +11,7 @@
   environment you would tune the excludes heavily to control volume.
 
   Apply on the endpoint (PowerShell as Administrator):
-    C:\Tools\Sysmon\Sysmon64a.exe -c C:\Tools\vantage-sysmon.xml
+    C:\Tools\Sysmon\Sysmon64a.exe -c C:\Tools\lookout-sysmon.xml
   Confirm:
     C:\Tools\Sysmon\Sysmon64a.exe -c      (dumps the active config)
 -->

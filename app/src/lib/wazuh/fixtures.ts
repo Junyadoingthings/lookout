@@ -1,5 +1,5 @@
 /**
- * Shapes modelled on the real alerts seen in the VANTAGE lab (rule 100010, the
+ * Shapes modelled on the real alerts seen in the Lookout lab (rule 100010, the
  * LSASS access detection). Used by tests and the seed script. Not real data:
  * these are hand-written examples.
  */
@@ -11,7 +11,7 @@ export const sampleLsassAlert = {
     id: 100010,
     level: 12,
     description: "Credential dumping: C:\\WINDOWS\\system32\\svchost.exe accessed LSASS memory",
-    groups: ["sysmon", "vantage", "credential_access"],
+    groups: ["sysmon", "lookout", "credential_access"],
     mitre: {
       id: ["T1003.001"],
       tactic: ["Credential Access"],
@@ -39,7 +39,7 @@ export const sampleDiscoveryAlert = {
     id: 100020,
     level: 6,
     description: "Discovery: recon binary executed -> whoami.exe",
-    groups: ["sysmon", "vantage", "discovery"],
+    groups: ["sysmon", "lookout", "discovery"],
     mitre: { id: ["T1033"], tactic: ["Discovery"], technique: ["System Owner/User Discovery"] },
   },
   data: {

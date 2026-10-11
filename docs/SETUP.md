@@ -28,7 +28,7 @@ Versions and why they were picked: [ARCHITECTURE.md](ARCHITECTURE.md#versions).
    npm run dev
    ```
 
-   **You should see:** `Local: http://localhost:3000`. Open it and you get a page that says VANTAGE.
+   **You should see:** `Local: http://localhost:3000`. Open it and you get a page that says Lookout.
 
 3. Run the checks:
 

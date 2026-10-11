@@ -1,6 +1,6 @@
 # Learnings
 
-Security concepts picked up while building VANTAGE. Each entry maps to Security+ SY0-701 where relevant.
+Security concepts picked up while building Lookout. Each entry maps to Security+ SY0-701 where relevant.
 
 ---
 

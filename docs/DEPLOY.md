@@ -5,8 +5,8 @@ The console is a standard Next.js app. These steps put the public demo online.
 ## 1. Push the repo to GitHub
 
 ```bash
-cd ~/Developer/vantage
-git remote add origin https://github.com/<you>/vantage.git   # if not set
+cd ~/Developer/lookout
+git remote add origin https://github.com/<you>/lookout.git   # if not set
 git push -u origin main
 ```
 
@@ -30,7 +30,7 @@ In the Vercel project settings, add these (Production and Preview):
 | `ANTHROPIC_API_KEY` | your `sk-ant-...` key (optional: without it, AI panels stay cached-only) |
 | `ANTHROPIC_MODEL` | e.g. `claude-opus-5-5` (or a cheaper model) |
 | `AI_MAX_CALLS_PER_DAY` | e.g. `200` |
-| `NEXT_PUBLIC_SITE_URL` | your Vercel URL, e.g. `https://vantage.vercel.app` (fixes OG image links) |
+| `NEXT_PUBLIC_SITE_URL` | your Vercel URL, e.g. `https://lookout.vercel.app` (fixes OG image links) |
 
 The key is read server-side only; it never reaches the browser bundle.
 
