@@ -2,6 +2,8 @@ import { Inbox, ShieldAlert } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { AiAccuracyCard } from "@/components/alerts/ai-accuracy-card";
+import { AiSearch } from "@/components/alerts/ai-search";
 import { AlertTable } from "@/components/alerts/alert-table";
 import { FilterBar } from "@/components/alerts/filter-bar";
 import { QueueSkeleton } from "@/components/alerts/queue-skeleton";
@@ -9,6 +11,9 @@ import { QueueStatsBar } from "@/components/alerts/queue-stats";
 import { Tour } from "@/components/tour";
 import { EmptyState, PageHeader } from "@/components/ui/page";
 import { getQueueStats, listAlerts, type AlertFilters } from "@/db/queries";
+import { aiConfigured } from "@/lib/ai/client";
+import { getAiAccuracy } from "@/lib/ai/stats";
+import { isAnalyst } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Alerts" };
 
@@ -19,12 +24,20 @@ function toArray(v: string | string[] | undefined): string[] | undefined {
 }
 
 async function QueueData({ filters }: { filters: AlertFilters }) {
-  const [alerts, stats] = await Promise.all([listAlerts(filters), getQueueStats()]);
+  const [alerts, stats, accuracy, analyst] = await Promise.all([
+    listAlerts(filters),
+    getQueueStats(),
+    getAiAccuracy(),
+    isAnalyst(),
+  ]);
   const filtered = Boolean(filters.severity || filters.status || filters.search);
+  const aiReady = analyst && aiConfigured();
 
   return (
     <>
       <QueueStatsBar stats={stats} />
+      <AiAccuracyCard stats={accuracy} />
+      <AiSearch aiReady={aiReady} />
       <div data-tour="filters">
         <FilterBar />
       </div>

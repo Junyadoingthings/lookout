@@ -1,5 +1,6 @@
 import { CornerDownRight, HelpCircle, Terminal } from "lucide-react";
 
+import { Explainable } from "@/components/alerts/explainable";
 import { CopyButton } from "@/components/ui/copy-button";
 import type { Alert } from "@/db/schema";
 import { buildProcessChain, readEventdata, baseName } from "@/lib/wazuh/fields";
@@ -57,13 +58,27 @@ export function KeyFields({ alert }: { alert: Alert }) {
   );
 }
 
-export function CommandLine({ alert }: { alert: Alert }) {
+export function CommandLine({ alert, aiReady = false }: { alert: Alert; aiReady?: boolean }) {
   const e = readEventdata(alert.rawLog);
   if (!e.commandLine) return null;
   return (
     <Section
       title="Command line"
-      action={<CopyButton value={e.commandLine} label="Copy command" />}
+      action={
+        <span className="flex items-center gap-2">
+          {aiReady && (
+            <Explainable
+              field="CommandLine"
+              value={e.commandLine}
+              ruleContext={alert.ruleDescription}
+              aiReady={aiReady}
+            >
+              <span className="text-[11px] text-muted-2">explain</span>
+            </Explainable>
+          )}
+          <CopyButton value={e.commandLine} label="Copy command" />
+        </span>
+      }
     >
       <pre className="overflow-x-auto rounded bg-surface-2 p-2.5 font-mono text-xs break-all whitespace-pre-wrap text-foreground">
         {e.commandLine}

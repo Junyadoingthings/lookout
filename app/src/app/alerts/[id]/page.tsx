@@ -85,7 +85,7 @@ export default async function AlertDetail({ params }: { params: Promise<{ id: st
                 <KeyFields alert={alert} />
               </Section>
               <ProcessTree alert={alert} />
-              <CommandLine alert={alert} />
+              <CommandLine alert={alert} aiReady={aiReady} />
               <AttackMapping alert={alert} />
               <Section title="Analyst notes">
                 <NotesEditor id={alert.id} initial={alert.analystNotes} />
