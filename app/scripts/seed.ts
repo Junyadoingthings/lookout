@@ -16,7 +16,9 @@ import { sanitizeBatch } from "@/lib/wazuh/sanitize";
 async function main() {
   if (process.argv.includes("--clear")) {
     await db.delete(alertsTable).where(eq(alertsTable.isSample, 1));
-    await db.delete(casesTable).where(eq(casesTable.title, "[Sample] Credential access attempt on WORKSTATION-01"));
+    await db
+      .delete(casesTable)
+      .where(eq(casesTable.title, "[Sample] Credential access attempt on WORKSTATION-01"));
     console.log("Cleared sample alerts and case.");
     process.exit(0);
   }
@@ -77,7 +79,12 @@ async function main() {
   await db
     .update(alertsTable)
     .set({ caseId })
-    .where(inArray(alertsTable.sourceId, alerts.map((a) => `sample-${a.sourceId}`)));
+    .where(
+      inArray(
+        alertsTable.sourceId,
+        alerts.map((a) => `sample-${a.sourceId}`),
+      ),
+    );
 
   console.log(`Seeded ${alerts.length} sample alerts and 1 sample case (isSample=1).`);
   process.exit(0);

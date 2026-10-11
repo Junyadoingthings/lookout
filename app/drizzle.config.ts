@@ -9,8 +9,7 @@ try {
 
 // Migrations prefer a direct (non-pooled) connection. Accept either the name we
 // document or Supabase's default DIRECT_URL.
-const url =
-  process.env.DATABASE_URL_DIRECT ?? process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+const url = process.env.DATABASE_URL_DIRECT ?? process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 
 export default defineConfig({
   schema: "./src/db/schema.ts",
