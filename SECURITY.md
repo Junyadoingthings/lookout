@@ -20,7 +20,7 @@ An attacker controls a lot of what ends up in a log: command lines, file names, 
 
 - Anyone can browse the demo read-only. AI panels show cached results only, so a visitor can't spend my API credits.
 - Writes and fresh AI calls require analyst mode. (Email login via Supabase is the remaining piece; analyst mode is gated server-side so the public demo cannot be mutated.)
-- Supabase row-level security is on for every table. The public key can only read published data. *(planned, Phase 3)*
+- Supabase row-level security: enable with the SQL in `docs/DEPLOY.md` so the publishable key can only read. Server actions use the Postgres connection and run with the analyst gate.
 
 ## Abuse limits
 
@@ -35,7 +35,7 @@ An attacker controls a lot of what ends up in a log: command lines, file names, 
 
 ## Headers
 
-CSP, HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy` and `Permissions-Policy`. *(planned, Phase 7)*
+Set on every response in `app/src/middleware.ts`: a Content-Security-Policy, HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy`. The CSP allows no external script origins; `script-src` keeps `'unsafe-inline'` because Next streams inline bootstrap scripts that are not individually nonced, and React escapes all rendered content so there is no HTML-injection sink.
 
 ## Data handling
 
