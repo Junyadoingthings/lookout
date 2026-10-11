@@ -34,9 +34,7 @@ export async function setTriageVerdictAction(id: string, accepted: boolean, aler
   revalidatePath(`/alerts/${alertId}`);
 }
 
-export type SearchActionResult =
-  | { ok: true; filter: SearchFilter }
-  | { ok: false; error: string };
+export type SearchActionResult = { ok: true; filter: SearchFilter } | { ok: false; error: string };
 
 export async function nlSearchAction(query: string): Promise<SearchActionResult> {
   await requireAnalyst();

@@ -6,10 +6,10 @@ This is a security project, so the console gets the same scrutiny as the lab. Th
 
 An attacker controls a lot of what ends up in a log: command lines, file names, registry values, user agents. Some of that text will reach Claude.
 
-- Log content is wrapped in clear delimiters and the prompt says it is data to analyse, never instructions to follow. *(planned, Phase 5)*
-- Every model response is parsed against a strict zod schema. Anything that doesn't fit is rejected, not "fixed up". *(planned, Phase 5)*
-- Model output never triggers an action by itself. It produces a suggestion; I accept, edit or reject it. *(planned, Phase 5)*
-- Natural-language search turns into a typed filter object, never SQL. *(planned, Phase 5)*
+- Log content is wrapped in clear delimiters and the prompt says it is data to analyse, never instructions to follow.
+- Every model response is parsed against a strict zod schema. Anything that doesn't fit is rejected, not "fixed up". A test proves an injected extra field is stripped and never surfaced.
+- Model output never triggers an action by itself. It produces a suggestion; I accept, edit or reject it.
+- Natural-language search turns into a typed, zod-validated filter object, never SQL. The filter only sets the same params the manual filters use.
 
 ## Secrets
 
@@ -18,15 +18,15 @@ An attacker controls a lot of what ends up in a log: command lines, file names, 
 
 ## Public demo vs analyst mode
 
-- Anyone can browse the demo read-only. AI panels show cached results only, so a visitor can't spend my API credits. *(planned, Phase 4/5)*
-- Writes and fresh AI calls require login as the single allowed analyst account. *(planned, Phase 4)*
+- Anyone can browse the demo read-only. AI panels show cached results only, so a visitor can't spend my API credits.
+- Writes and fresh AI calls require analyst mode. (Email login via Supabase is the remaining piece; analyst mode is gated server-side so the public demo cannot be mutated.)
 - Supabase row-level security is on for every table. The public key can only read published data. *(planned, Phase 3)*
 
 ## Abuse limits
 
-- Every AI and ingest endpoint is rate limited. *(planned, Phase 5/6)*
-- A daily cap on fresh AI calls (`AI_MAX_CALLS_PER_DAY`). *(planned, Phase 5)*
-- AI results are cached by alert ID + prompt version. *(planned, Phase 5)*
+- Every fresh AI call goes through a database-backed daily rate limit (atomic, works on serverless).
+- A daily cap on fresh AI calls (`AI_MAX_CALLS_PER_DAY`), enforced in one guarded UPSERT.
+- AI results are cached by alert ID + feature + prompt version, so the public demo costs nothing.
 
 ## Ingest endpoint
 

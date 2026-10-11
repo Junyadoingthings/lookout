@@ -44,6 +44,15 @@ export const searchFilter = z.object({
 });
 export type SearchFilter = z.infer<typeof searchFilter>;
 
+/** First-draft incident report fields the analyst edits before publishing. */
+export const caseReportOutput = z.object({
+  summary: z.string().min(1).max(1500),
+  verdict: z.string().min(1).max(1000),
+  responseSteps: z.string().min(1).max(1500),
+  lessonsLearned: z.string().min(1).max(1000),
+});
+export type CaseReportOutput = z.infer<typeof caseReportOutput>;
+
 /** JSON Schema for the Messages API output_config.format, kept in sync by hand. */
 export const TRIAGE_JSON_SCHEMA = {
   type: "object",

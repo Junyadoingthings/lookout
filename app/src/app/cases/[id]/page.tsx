@@ -3,9 +3,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SeverityBadge, StatusBadge } from "@/components/ui/badge";
 import { Section } from "@/components/alerts/detail-panels";
+import { CaseReportPanel } from "@/components/cases/case-report-panel";
+import { SeverityBadge, StatusBadge } from "@/components/ui/badge";
 import { getCase } from "@/db/queries";
+import { aiConfigured } from "@/lib/ai/client";
+import { isAnalyst } from "@/lib/auth";
 import { relativeTime } from "@/lib/utils";
 
 export async function generateMetadata({
@@ -23,6 +26,9 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
   const c = await getCase(id);
   if (!c) notFound();
 
+  const [analyst] = await Promise.all([isAnalyst()]);
+  const aiReady = analyst && aiConfigured();
+
   return (
     <div className="flex flex-col">
       <div className="border-b border-border px-4 py-3 md:px-6">
@@ -37,6 +43,7 @@ export default async function CaseDetail({ params }: { params: Promise<{ id: str
       </div>
 
       <div className="mx-auto w-full max-w-3xl space-y-4 p-4 md:p-6">
+        <CaseReportPanel caseId={c.id} aiReady={aiReady} />
         <Section title={`Timeline · ${c.alerts.length} alert${c.alerts.length === 1 ? "" : "s"}`}>
           <ol className="space-y-2">
             {c.alerts.map((a) => (
