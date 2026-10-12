@@ -5,59 +5,62 @@
 
 /*
   Lookout design tokens.
-  Dark is the default. Light is a first-class theme, toggled by next-themes
-  (class strategy: .light / .dark on <html>). Colours are neutral greys with a
-  single muted accent and muted, readable severity colours.
+  Warm white is the default; a warm charcoal dark is a first-class theme,
+  toggled by next-themes (class strategy: .light / .dark on <html>). The brand
+  colour is a confident orange on warm, paper-like neutrals. Severity colours
+  stay on a red-to-amber ramp so they read as urgency, not as the brand.
+  Text that sits on the orange accent uses a dark warm ink (--accent-fg), the
+  way a good orange button does, so it never relies on low-contrast white.
 */
 :root,
-:root.dark {
-  --background: #0a0b0d;
-  --surface: #121317;
-  --surface-2: #181a1f;
-  --surface-hover: #1d2026;
-  --border: #26282e;
-  --border-strong: #33363d;
-  --foreground: #e7e8ea;
-  --muted: #9ca1aa;
-  --muted-2: #6b7079;
-  --accent: #5b8cff;
-  --accent-fg: #ffffff;
-  --accent-muted: #1c2740;
-  --ring: #5b8cff;
+:root.light {
+  --background: #faf6f0;
+  --surface: #ffffff;
+  --surface-2: #f6efe6;
+  --surface-hover: #f0e7da;
+  --border: #ece2d4;
+  --border-strong: #ddceba;
+  --foreground: #241c15;
+  --muted: #6c6054;
+  --muted-2: #9b8d7d;
+  --accent: #e0531a;
+  --accent-fg: #fff6ef;
+  --accent-muted: #fce7d9;
+  --ring: #e0531a;
 
-  --sev-critical: #e5484d;
-  --sev-high: #e8833a;
-  --sev-medium: #d7a63b;
-  --sev-low: #4a90d9;
-  --sev-info: #8a8f98;
+  --sev-critical: #bc2f26;
+  --sev-high: #db4a30;
+  --sev-medium: #cc8a1a;
+  --sev-low: #2f7fa6;
+  --sev-info: #8a8075;
 
-  --ok: #43b581;
-  --warn: #d7a63b;
+  --ok: #3a945f;
+  --warn: #cc8a1a;
 }
 
-:root.light {
-  --background: #fafafa;
-  --surface: #ffffff;
-  --surface-2: #f4f4f5;
-  --surface-hover: #f0f0f1;
-  --border: #e4e4e7;
-  --border-strong: #d4d4d8;
-  --foreground: #18181b;
-  --muted: #52525b;
-  --muted-2: #8a8f98;
-  --accent: #2563eb;
-  --accent-fg: #ffffff;
-  --accent-muted: #e8effd;
-  --ring: #2563eb;
+:root.dark {
+  --background: #171009;
+  --surface: #1f1810;
+  --surface-2: #271e14;
+  --surface-hover: #30251a;
+  --border: #392c1e;
+  --border-strong: #4d3c28;
+  --foreground: #f4ece0;
+  --muted: #b4a690;
+  --muted-2: #827666;
+  --accent: #ff7a33;
+  --accent-fg: #2a1203;
+  --accent-muted: #3b2413;
+  --ring: #ff7a33;
 
-  --sev-critical: #d1383d;
-  --sev-high: #c96a1f;
-  --sev-medium: #a67c1a;
-  --sev-low: #2f73b8;
-  --sev-info: #71757d;
+  --sev-critical: #e8605a;
+  --sev-high: #f0714a;
+  --sev-medium: #e3ab44;
+  --sev-low: #4ea6cf;
+  --sev-info: #9a9185;
 
-  --ok: #2f9e6b;
-  --warn: #a67c1a;
+  --ok: #4bb585;
+  --warn: #e3ab44;
 }
 
 @theme inline {
@@ -93,10 +96,10 @@
 }
 
 html {
-  color-scheme: dark;
-}
-html.light {
   color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -146,7 +149,7 @@ body {
 }
 
 /* --- Boot splash (app intro loader) ------------------------------------- *
- * Dark, on-brand splash drawn with the Lookout shield. Pure CSS: it paints
+ * Warm, on-brand splash drawn with the Lookout shield. Pure CSS: it paints
  * on first load with no JS, auto-fades via a forwards animation, and ends
  * non-interactive, so it plays briefly each time the app is opened.         */
 #app-loader {
@@ -158,8 +161,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: 22px;
-  background: #0a0b0d;
-  color: #e7e8ea;
+  background: radial-gradient(circle at 50% 42%, #fff6ec, #fbefe4 70%);
+  color: #241c15;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   animation: li-out 0.45s ease 1.35s forwards;
 }
@@ -183,7 +186,7 @@ body {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(91, 140, 255, 0.35), transparent 65%);
+  background: radial-gradient(circle, rgba(224, 83, 26, 0.3), transparent 65%);
   filter: blur(6px);
   animation: li-glow 2s ease-in-out infinite;
 }
@@ -202,7 +205,7 @@ body {
   position: relative;
   width: 72px;
   height: 72px;
-  color: #5b8cff;
+  color: #e0531a;
   overflow: visible;
 }
 .li-shield {
@@ -238,7 +241,7 @@ body {
 }
 .li-ping {
   fill: none;
-  stroke: #5b8cff;
+  stroke: #e0531a;
   stroke-width: 1.5;
   opacity: 0;
   transform-box: fill-box;
@@ -268,7 +271,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.16em;
   padding-left: 0.16em;
-  color: #e7e8ea;
+  color: #241c15;
 }
 .li-word span {
   opacity: 0;
@@ -285,7 +288,7 @@ body {
   font-size: 10px;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: #6b7079;
+  color: #b06a3d;
   opacity: 0;
   animation: li-fade 0.6s ease 1s forwards;
 }
@@ -298,7 +301,7 @@ body {
   width: 168px;
   height: 2px;
   border-radius: 2px;
-  background: #1d2026;
+  background: #f0e1d1;
   overflow: hidden;
 }
 .li-bar::after {
@@ -308,8 +311,8 @@ body {
   width: 100%;
   transform: scaleX(0);
   transform-origin: left;
-  background: linear-gradient(90deg, #5b8cff, #9db8ff);
-  box-shadow: 0 0 8px rgba(91, 140, 255, 0.6);
+  background: linear-gradient(90deg, #e0531a, #ff8a4c);
+  box-shadow: 0 0 8px rgba(224, 83, 26, 0.55);
   animation: li-bar 1.1s ease 0.2s forwards;
 }
 @keyframes li-bar {

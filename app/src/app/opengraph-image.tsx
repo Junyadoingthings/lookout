@@ -13,7 +13,7 @@ export default function OgImage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "#0a0b0d",
+        background: "#faf6f0",
         padding: 80,
         fontFamily: "sans-serif",
       }}
@@ -23,7 +23,7 @@ export default function OgImage() {
           <path
             d="M5 6.5 C5 5.7 5.7 5 6.5 5 H25.5 C26.3 5 27 5.7 27 6.5 V16 C27 22.5 22.2 26.3 16 28 C9.8 26.3 5 22.5 5 16 Z"
             fill="none"
-            stroke="#5b8cff"
+            stroke="#e0531a"
             strokeWidth="1.8"
             strokeLinejoin="round"
             opacity="0.4"
@@ -31,14 +31,14 @@ export default function OgImage() {
           <path
             d="M10 11 L16 20.5 L22 11"
             fill="none"
-            stroke="#5b8cff"
+            stroke="#e0531a"
             strokeWidth="2.4"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <circle cx="16" cy="13.3" r="1.9" fill="#5b8cff" />
+          <circle cx="16" cy="13.3" r="1.9" fill="#e0531a" />
         </svg>
-        <span style={{ color: "#e7e8ea", fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
+        <span style={{ color: "#241c15", fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
           Lookout
         </span>
       </div>
@@ -46,7 +46,7 @@ export default function OgImage() {
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <span
           style={{
-            color: "#e7e8ea",
+            color: "#241c15",
             fontSize: 60,
             fontWeight: 700,
             lineHeight: 1.1,
@@ -55,7 +55,7 @@ export default function OgImage() {
         >
           Home SOC lab and alert triage console
         </span>
-        <span style={{ color: "#9ca1aa", fontSize: 30, maxWidth: 900 }}>
+        <span style={{ color: "#6c6054", fontSize: 30, maxWidth: 900 }}>
           Wazuh · Sysmon · Atomic Red Team · custom detections · Claude-assisted triage
         </span>
       </div>
@@ -65,9 +65,9 @@ export default function OgImage() {
           <span
             key={t}
             style={{
-              color: "#9ca1aa",
+              color: "#6c6054",
               fontSize: 24,
-              border: "1px solid #26282e",
+              border: "1px solid #ddceba",
               borderRadius: 8,
               padding: "8px 16px",
             }}
