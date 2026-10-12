@@ -2,6 +2,8 @@
 
 A home SOC lab and the triage console I built on top of it.
 
+![Lookout: a home security operations center, triaged for real](docs/marketing/01-hero.png)
+
 I run real attack techniques against a Windows VM, collect the logs with Sysmon and Wazuh, write detection rules for what the defaults miss, and triage the alerts in a web console. The console uses Claude to draft summaries and suggestions. I make every final call.
 
 **Live demo:** _add your Vercel link here_ · **Setup from zero:** [docs/SETUP.md](docs/SETUP.md)
@@ -89,3 +91,13 @@ A few of the lessons, with more in [docs/LEARNINGS.md](docs/LEARNINGS.md):
 | `lab/sysmon/`, `lab/atomic/`, `lab/export/` | Sysmon config, attack runbook, export/sanitise |
 | `docs/` | Setup, architecture, deploy, case write-ups |
 | `SECURITY.md` | Security decisions for the console |
+
+## Screenshots
+
+Open any detection and see the whole story: key fields, process tree, ATT&CK mapping, and the raw event.
+
+![Alert detail: key fields, process tree, ATT&CK mapping and the raw event](docs/marketing/02-detail.png)
+
+A copilot that reads the real data to help me triage. It is read-only, so I make every final call.
+
+![Lookout Copilot: a read-only AI assistant over the alert queue](docs/marketing/03-copilot.png)
