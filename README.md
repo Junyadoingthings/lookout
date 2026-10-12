@@ -6,7 +6,7 @@ A home SOC lab and the triage console I built on top of it.
 
 I run real attack techniques against a Windows VM, collect the logs with Sysmon and Wazuh, write detection rules for what the defaults miss, and triage the alerts in a web console. The console uses Claude to draft summaries and suggestions. I make every final call.
 
-**Live demo:** _add your Vercel link here_ · **Setup from zero:** [docs/SETUP.md](docs/SETUP.md)
+**Live demo:** [lookout-kappa.vercel.app](https://lookout-kappa.vercel.app) · **Setup from zero:** [docs/SETUP.md](docs/SETUP.md)
 
 > The demo is public and read-only. Every alert in it came from my lab, with real hostnames, usernames and IPs replaced by placeholders.
 
