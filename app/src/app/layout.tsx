@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { MobileNav, Sidebar } from "@/components/app-shell/sidebar";
+import { Copilot } from "@/components/assistant/copilot";
 import { CommandMenu } from "@/components/command-menu";
 import { ShortcutsOverlay } from "@/components/shortcuts-overlay";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </div>
           <CommandMenu />
           <ShortcutsOverlay />
+          <Copilot />
           <Toaster
             theme="system"
             position="bottom-right"
