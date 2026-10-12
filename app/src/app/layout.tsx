@@ -35,6 +35,46 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full">
+        {/* Boot splash: pure-CSS so it paints on first load with no JS wait.
+            It draws the mark, sweeps the bar, then fades out on its own via a
+            forwards animation and ends non-interactive. No JS, no hydration. */}
+        <div id="app-loader" aria-hidden="true">
+          <div className="li-mark">
+            <span className="li-glow" />
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle className="li-ping li-ping1" cx="16" cy="16" r="6" />
+              <circle className="li-ping li-ping2" cx="16" cy="16" r="6" />
+              <path
+                className="li-shield"
+                pathLength={1}
+                d="M4 5.5 C4 4.7 4.7 4 5.5 4 H26.5 C27.3 4 28 4.7 28 5.5 V16 C28 23 22.8 27 16 29 C9.2 27 4 23 4 16 Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+                opacity="0.4"
+              />
+              <path
+                className="li-chev"
+                pathLength={1}
+                d="M10 11 L16 21 L22 11"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle className="li-dot" cx="16" cy="13.5" r="2" fill="currentColor" />
+            </svg>
+          </div>
+          <div className="li-word" aria-label="Lookout">
+            {"Lookout".split("").map((c, i) => (
+              <span key={i} style={{ animationDelay: `${0.55 + i * 0.05}s` }}>
+                {c}
+              </span>
+            ))}
+          </div>
+          <div className="li-sub">Security Operations</div>
+          <div className="li-bar" />
+        </div>
         <ThemeProvider>
           <div className="flex min-h-dvh">
             <Sidebar />

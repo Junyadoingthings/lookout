@@ -144,3 +144,176 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* --- Boot splash (app intro loader) ------------------------------------- *
+ * Dark, on-brand splash drawn with the Lookout shield. Pure CSS: it paints
+ * on first load with no JS, auto-fades via a forwards animation, and ends
+ * non-interactive, so it plays briefly each time the app is opened.         */
+#app-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: #0a0b0d;
+  color: #e7e8ea;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  animation: li-out 0.45s ease 1.35s forwards;
+}
+@keyframes li-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.li-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+}
+.li-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91, 140, 255, 0.35), transparent 65%);
+  filter: blur(6px);
+  animation: li-glow 2s ease-in-out infinite;
+}
+@keyframes li-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+.li-mark svg {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  color: #5b8cff;
+  overflow: visible;
+}
+.li-shield {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: li-draw 0.8s ease 0.05s forwards;
+}
+.li-chev {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: li-draw 0.7s ease 0.35s forwards;
+}
+@keyframes li-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.li-dot {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: li-pop 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) 0.9s forwards;
+}
+@keyframes li-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.li-ping {
+  fill: none;
+  stroke: #5b8cff;
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.li-ping1 {
+  animation: li-ping 1.5s ease-out 0.9s 1;
+}
+.li-ping2 {
+  animation: li-ping 1.5s ease-out 1.2s 1;
+}
+@keyframes li-ping {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+.li-word {
+  display: flex;
+  gap: 1px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  padding-left: 0.16em;
+  color: #e7e8ea;
+}
+.li-word span {
+  opacity: 0;
+  transform: translateY(7px);
+  animation: li-rise 0.5s ease forwards;
+}
+@keyframes li-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.li-sub {
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #6b7079;
+  opacity: 0;
+  animation: li-fade 0.6s ease 1s forwards;
+}
+@keyframes li-fade {
+  to {
+    opacity: 1;
+  }
+}
+.li-bar {
+  width: 168px;
+  height: 2px;
+  border-radius: 2px;
+  background: #1d2026;
+  overflow: hidden;
+}
+.li-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, #5b8cff, #9db8ff);
+  box-shadow: 0 0 8px rgba(91, 140, 255, 0.6);
+  animation: li-bar 1.1s ease 0.2s forwards;
+}
+@keyframes li-bar {
+  to {
+    transform: scaleX(1);
+  }
+}
