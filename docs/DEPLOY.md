@@ -50,20 +50,40 @@ npm run seed
 
 ## 5. Supabase row-level security
 
-In the Supabase SQL editor, enable RLS so the anon/publishable key can only read:
+The app never uses Supabase's Data API (the publishable/anon key). Every query
+goes through `DATABASE_URL` as the `postgres` role, which has `BYPASSRLS`. So the
+right setting is **RLS on, no policies**: the server keeps full access and
+anyone holding the public key gets nothing.
+
+Supabase grants `anon` and `authenticated` full rights (including `DELETE` and
+`TRUNCATE`) on every new table in `public`, so with RLS off the whole database is
+writable by anyone with the project URL. In the Supabase SQL editor, run:
 
 ```sql
-alter table alerts enable row level security;
-alter table cases enable row level security;
-alter table ai_analyses enable row level security;
-create policy "public read" on alerts for select using (true);
-create policy "public read" on cases for select using (true);
-create policy "public read" on ai_analyses for select using (true);
+begin;
+alter table public.alerts      enable row level security;
+alter table public.cases       enable row level security;
+alter table public.ai_analyses enable row level security;
+alter table public.ai_usage    enable row level security;
+-- Defence in depth: the app never needs these roles on our tables.
+revoke all on table public.alerts, public.cases, public.ai_analyses, public.ai_usage
+  from anon, authenticated;
+commit;
 ```
 
-The app connects with the Postgres connection string (service role) for the
-server actions, which bypass RLS by design; RLS protects any direct use of the
-publishable key.
+Then confirm that every row shows `rls = true` and `public_grants = 0`:
+
+```sql
+select c.relname as table, c.relrowsecurity as rls,
+  (select count(*) from information_schema.role_table_grants g
+    where g.table_schema = 'public' and g.table_name = c.relname
+      and g.grantee in ('anon', 'authenticated')) as public_grants
+from pg_class c join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public' and c.relkind = 'r' order by 1;
+```
+
+`src/db/schema.ts` declares `.enableRLS()` on every table, so `npm run db:push`
+keeps RLS on. Any new table must do the same.
 
 ## 6. Security headers
 

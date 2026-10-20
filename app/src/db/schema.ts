@@ -3,6 +3,12 @@ import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "d
 
 import { SEVERITIES } from "@/lib/severity";
 
+// Every table calls .enableRLS() and has no policies. The app connects as the
+// `postgres` role, which bypasses RLS, so the server keeps full access while
+// Supabase's public Data API (anon/publishable key) can read nothing.
+// Declaring it here also stops `db:push` from switching RLS back off.
+// Any new table MUST add .enableRLS() too.
+
 /**
  * Alert lifecycle status, as an L1 analyst would move a ticket through it.
  */
@@ -72,7 +78,7 @@ export const alerts = pgTable(
     index("alerts_status_idx").on(t.status),
     index("alerts_case_idx").on(t.caseId),
   ],
-);
+).enableRLS();
 
 /**
  * A group of related alerts treated as one incident.
@@ -87,7 +93,7 @@ export const cases = pgTable("cases", {
   lessonsLearned: text("lessons_learned"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-});
+}).enableRLS();
 
 /** The AI features whose output we cache. */
 export const aiFeature = pgEnum("ai_feature", [
@@ -119,13 +125,13 @@ export const aiAnalyses = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("ai_alert_feature_idx").on(t.alertId, t.feature, t.promptVersion)],
-);
+).enableRLS();
 
 /** Daily counter for the fresh-AI-call rate limit. One row per day. */
 export const aiUsage = pgTable("ai_usage", {
   day: text("day").primaryKey(), // YYYY-MM-DD (UTC)
   calls: integer("calls").notNull().default(0),
-});
+}).enableRLS();
 
 export const alertsRelations = relations(alerts, ({ one }) => ({
   case: one(cases, { fields: [alerts.caseId], references: [cases.id] }),

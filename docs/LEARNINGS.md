@@ -21,3 +21,12 @@ Security concepts picked up while building Lookout. Each entry maps to Security+
 **Why it matters:** Pinning exact versions is part of *configuration/change management*. You know exactly what is deployed, you can reproduce it, and an upstream change can't alter your environment without a deliberate update. The same logic underlies *supply-chain security*: verify what you pull instead of trusting a moving `latest` tag.
 **Sec+ domain:** 4.0 Security Operations (configuration management), 2.0 Threats (supply-chain).
 **Source:** https://hub.docker.com/r/wazuh/wazuh-manager/tags
+
+---
+
+### Default-allow is a vulnerability: Supabase RLS
+**Context:** Supabase's security advisor flagged `rls_disabled_in_public` on all four tables. Supabase auto-grants the `anon` role SELECT/INSERT/UPDATE/DELETE/TRUNCATE on new tables in `public`, and the anon key ships to browsers. With RLS off, anyone with the project URL could read or wipe the database over the REST API.
+**Fix:** RLS on with **no policies** (deny by default), plus `revoke all ... from anon, authenticated`. The server connects as `postgres` (BYPASSRLS), so the app is unaffected. RLS is declared in the Drizzle schema so a later `db:push` can't silently switch it off.
+**Why it matters:** This is *least privilege* and *secure defaults*. A component that grants everything until told otherwise fails open. Note also that RLS filters rows, but it does not cover `TRUNCATE`. Revoking privileges covers that gap, which makes it *defence in depth*.
+**Sec+ domain:** 3.0 Security Architecture (secure defaults, least privilege), 4.0 Security Operations (vulnerability remediation, verifying the fix).
+**Source:** https://supabase.com/docs/guides/database/postgres/row-level-security
